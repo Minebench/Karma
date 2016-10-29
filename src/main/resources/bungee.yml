@@ -1,0 +1,4 @@
+name: Karma
+version: '${minecraft.plugin.version}'
+main: io.github.apfelcreme.Karma.Bungee.KarmaPlugin
+author: Lord36
