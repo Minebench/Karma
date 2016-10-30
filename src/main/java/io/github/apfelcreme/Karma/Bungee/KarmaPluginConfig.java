@@ -73,13 +73,6 @@ public class KarmaPluginConfig {
             configuration = yamlProvider.load(configurationFile);
             languageConfiguration = yamlProvider.load(languageConfigurationFile);
 
-            for (ServerInfo serverInfo : ProxyServer.getInstance().getServers().values()) {
-                if (configuration.get("disabledWorlds." + serverInfo.getAddress().getHostName() + "."
-                        + serverInfo.getAddress().getPort()) == null) {
-                    configuration.set("disabledWorlds." + serverInfo.getAddress().getHostName() + "."
-                            + serverInfo.getAddress().getPort(), "");
-                }
-            }
             yamlProvider.save(configuration, configurationFile);
             yamlProvider.save(languageConfiguration, languageConfigurationFile);
 
