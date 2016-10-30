@@ -9,8 +9,7 @@ import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.text.DecimalFormat;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Copyright (C) 2016 Lord36 aka Apfelcreme
@@ -49,15 +48,33 @@ public class ListCommand implements SubCommand {
             if (targetUUID != null) {
                 PlayerData playerData = KarmaPlugin.getInstance().getDatabaseController().getPlayerData(targetUUID);
                 if (playerData != null) {
-                    for (Map.Entry<UUID, Relation> entry : playerData.getRelations().entrySet()) {
-                        Relation relation = entry.getValue();
-                        if (player.getUniqueId().equals(targetUUID)) {
-                            KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("info.karma.list.headerYou"));
-                        } else {
-                            KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("info.karma.list.headerSomeoneElse")
-                                    .replace("{0}", args[1]));
-                        }
-                        String toName = KarmaPlugin.getInstance().getNameByUUID(entry.getKey());
+                    List<Relation> relations = new ArrayList<>(playerData.getRelations().values());
+                    Collections.sort(relations);
+                    int page = 0;
+                    if (args.length > 2 && KarmaPlugin.isNumeric(args[2])) {
+                        page = Integer.parseInt(args[2]) - 1;
+                    }
+                    if (page < 0) {
+                        page = 0;
+                    }
+                    int pageSize = KarmaPluginConfig.getInstance().getConfiguration().getInt("pageSize");
+                    int maxPages = (int) Math.ceil((float) relations.size() / pageSize);
+                    if (page >= maxPages - 1) {
+                        page = maxPages - 1;
+                    }
+                    if (player.getUniqueId().equals(targetUUID)) {
+                        KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("info.karma.list.headerYou")
+                                .replace("{0}", String.valueOf(page + 1))
+                                .replace("{1}", String.valueOf(maxPages)));
+                    } else {
+                        KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("info.karma.list.headerSomeoneElse")
+                                .replace("{0}", args[1])
+                                .replace("{1}", String.valueOf(page + 1))
+                                .replace("{2}", String.valueOf(maxPages)));
+                    }
+                    for (int i = page * pageSize; i < (page + 1) * pageSize && i < relations.size(); i++) {
+                        Relation relation = relations.get(i);
+                        String toName = KarmaPlugin.getInstance().getNameByUUID(relation.getTo());
                         if (toName != null) {
                             KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("info.karma.list.element")
                                     .replace("{0}", toName)

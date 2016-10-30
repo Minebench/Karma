@@ -46,8 +46,8 @@ texts:
         infoYou: '&f Du hast derzeit &d{0}&f Karma. Um mehr Details zu sehen, probiere &d/karma list'
         infoSomeoneElse: '&f {0} hat derzeit &d{1}&f Karma. Um mehr Details zu sehen, probiere &d/karma list {0}'
       list:
-        headerYou: '&f Du hast dich bei folgenden Spielern bedankt oder von ihnen Karma erhalten:'
-        headerSomeoneElse: '&f {0} hat sich bei folgenden Spielern bedankt oder von ihnen Karma erhalten:'
+        headerYou: '&f Du hast dich bei folgenden Spielern bedankt oder von ihnen Karma erhalten: ({0}/{1})'
+        headerSomeoneElse: '&f {0} hat sich bei folgenden Spielern bedankt oder von ihnen Karma erhalten: ({1}/{2})'
         element: '&d {0}&f: &d{1}&f vergeben, &d{2}&f erhalten'
       reload:
         reloaded: '&f Die Config wurde neu geladen!'

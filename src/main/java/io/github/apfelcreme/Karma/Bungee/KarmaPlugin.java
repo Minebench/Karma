@@ -26,6 +26,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * Copyright (C) 2016 Lord36 aka Apfelcreme
@@ -309,4 +310,15 @@ public class KarmaPlugin extends Plugin {
         }
         return uuid;
     }
+
+    /**
+     * checks if a String contains only numbers
+     *
+     * @param string a string
+     * @return true or false
+     */
+    public static boolean isNumeric(String string) {
+        return Pattern.matches("([0-9])*", string);
+    }
+
 }

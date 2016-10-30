@@ -22,7 +22,7 @@ import java.util.UUID;
  *
  * @author Lord36 aka Apfelcreme
  */
-public class Relation {
+public class Relation implements Comparable<Relation> {
 
     private UUID to;
     private List<Transaction> transactionsDoneTo;
@@ -100,6 +100,7 @@ public class Relation {
 
     /**
      * returns the date of the last transaction the player sent to the receiver
+     *
      * @return the date of the last transaction done by the relation sender;
      */
     public Date getLastTransactionDate() {
@@ -119,5 +120,17 @@ public class Relation {
                 ", transactionsDoneTo=" + transactionsDoneTo +
                 ", transactionsReceivedFrom=" + transactionsReceivedFrom +
                 '}';
+    }
+
+    /**
+     * compares this relation to another relation
+     *
+     * @param o another relation
+     * @return -1 if smaller, 0 if equal, +1 if greater
+     */
+    @Override
+    public int compareTo(Relation o) {
+        return Double.compare(o.getAmountGiven(), this.getAmountGiven());
+
     }
 }
