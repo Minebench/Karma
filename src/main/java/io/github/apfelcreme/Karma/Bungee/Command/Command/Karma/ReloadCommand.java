@@ -37,6 +37,7 @@ public class ReloadCommand implements SubCommand {
         ProxiedPlayer player = (ProxiedPlayer) sender;
         if (player.hasPermission("Karma.mod")) {
             KarmaPluginConfig.getInstance().reload();
+            KarmaPlugin.getInstance().getPlayerDataCache().clear();
             KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("info.karma.reload.reloaded"));
         } else {
             KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("error.noPermission"));
