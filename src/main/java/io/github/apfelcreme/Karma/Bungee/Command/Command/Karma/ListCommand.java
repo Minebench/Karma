@@ -72,15 +72,19 @@ public class ListCommand implements SubCommand {
                                 .replace("{1}", String.valueOf(page + 1))
                                 .replace("{2}", String.valueOf(maxPages)));
                     }
-                    for (int i = page * pageSize; i < (page + 1) * pageSize && i < relations.size(); i++) {
-                        Relation relation = relations.get(i);
-                        String toName = KarmaPlugin.getInstance().getNameByUUID(relation.getTo());
-                        if (toName != null) {
-                            KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("info.karma.list.element")
-                                    .replace("{0}", toName)
-                                    .replace("{1}", new DecimalFormat("0.##").format(relation.getAmountGiven()))
-                                    .replace("{2}", new DecimalFormat("0.##").format(relation.getAmountReceived())));
+                    if (relations.size() != 0) {
+                        for (int i = page * pageSize; i < (page + 1) * pageSize && i < relations.size(); i++) {
+                            Relation relation = relations.get(i);
+                            String toName = KarmaPlugin.getInstance().getNameByUUID(relation.getTo());
+                            if (toName != null) {
+                                KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("info.karma.list.element")
+                                        .replace("{0}", toName)
+                                        .replace("{1}", new DecimalFormat("0.##").format(relation.getAmountGiven()))
+                                        .replace("{2}", new DecimalFormat("0.##").format(relation.getAmountReceived())));
+                            }
                         }
+                    } else {
+                        KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("info.karma.list.noElements"));
                     }
                 }
             } else {

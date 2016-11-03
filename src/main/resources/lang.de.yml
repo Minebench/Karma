@@ -49,6 +49,7 @@ texts:
         headerYou: '&f Du hast dich bei folgenden Spielern bedankt oder von ihnen Karma erhalten: ({0}/{1})'
         headerSomeoneElse: '&f {0} hat sich bei folgenden Spielern bedankt oder von ihnen Karma erhalten: ({1}/{2})'
         element: '&d {0}&f: &d{1}&f vergeben, &d{2}&f erhalten'
+        noElements: '&d Es wurden keine Einträge gefunden!'
       reload:
         reloaded: '&f Die Config wurde neu geladen!'
       reset:
