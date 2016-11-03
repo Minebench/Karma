@@ -2,15 +2,12 @@ package io.github.apfelcreme.Karma.Bungee;
 
 import io.github.apfelcreme.Karma.Bungee.Particle.Effect;
 import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -59,7 +56,6 @@ public class KarmaPluginConfig {
      */
     public KarmaPluginConfig() {
         File configurationFile = new File(KarmaPlugin.getInstance().getDataFolder().getAbsoluteFile() + "/config.yml");
-        File languageConfigurationFile = new File(KarmaPlugin.getInstance().getDataFolder().getAbsoluteFile() + "/lang.de.yml");
         try {
             if (!KarmaPlugin.getInstance().getDataFolder().exists()) {
                 KarmaPlugin.getInstance().getDataFolder().mkdir();
@@ -67,10 +63,13 @@ public class KarmaPluginConfig {
             if (!configurationFile.exists()) {
                 createConfigFile("config.yml", configurationFile);
             }
-            if (!languageConfigurationFile.exists()) {
-                createConfigFile("lang.de.yml", languageConfigurationFile);
-            }
             configuration = yamlProvider.load(configurationFile);
+
+            File languageConfigurationFile = new File(KarmaPlugin.getInstance().getDataFolder().getAbsoluteFile()
+                    + "/" + configuration.getString("languageFile"));
+            if (!languageConfigurationFile.exists()) {
+                createConfigFile(configuration.getString("languageFile"), languageConfigurationFile);
+            }
             languageConfiguration = yamlProvider.load(languageConfigurationFile);
 
             yamlProvider.save(configuration, configurationFile);

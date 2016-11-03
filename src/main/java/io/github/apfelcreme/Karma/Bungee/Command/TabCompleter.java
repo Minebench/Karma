@@ -85,7 +85,8 @@ public class TabCompleter implements Listener {
                     }
                 }
             }
-        } else if (plugin.getParticlesCommandAliases().contains(args[0].replace("/", ""))) {
+        } else if (KarmaPluginConfig.getInstance().useParticles()
+                && plugin.getParticlesCommandAliases().contains(args[0].replace("/", ""))) {
             if (args.length > 1) {
                 ParticlesCommandExecutor.Operation operation = ParticlesCommandExecutor.Operation.getOperation(args[1]);
                 if (operation != null) {
