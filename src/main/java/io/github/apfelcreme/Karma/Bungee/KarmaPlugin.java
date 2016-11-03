@@ -105,12 +105,13 @@ public class KarmaPlugin extends Plugin {
         particlesCommandExecutor = new ParticlesCommandExecutor("particle");
         thxCommandExecutor = new ThxCommandExecutor("thanks", "ty", "danke");
         getProxy().getPluginManager().registerCommand(this, karmaCommandExecutor);
-        getProxy().getPluginManager().registerCommand(this, particlesCommandExecutor);
         getProxy().getPluginManager().registerCommand(this, thxCommandExecutor);
         getProxy().getPluginManager().registerListener(this, new TabCompleter(this));
-        getProxy().getPluginManager().registerListener(this, new ServerSwitchListener(this));
-        getProxy().getPluginManager().registerListener(this, new VanishStatusChangeListener(this));
-
+        if (KarmaPluginConfig.getInstance().useParticles()) {
+            getProxy().getPluginManager().registerCommand(this, particlesCommandExecutor);
+            getProxy().getPluginManager().registerListener(this, new ServerSwitchListener(this));
+            getProxy().getPluginManager().registerListener(this, new VanishStatusChangeListener(this));
+        }
         // register the messaging channel
         getProxy().registerChannel("Karma");
 

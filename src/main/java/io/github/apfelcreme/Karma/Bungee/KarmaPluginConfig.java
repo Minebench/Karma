@@ -173,6 +173,15 @@ public class KarmaPluginConfig {
     }
 
     /**
+     * returns whether particles are enabled or not
+     *
+     * @return true or false
+     */
+    public boolean useParticles() {
+        return configuration.getBoolean("useParticles", true);
+    }
+
+    /**
      * returns the configuration object
      *
      * @return the configuration object

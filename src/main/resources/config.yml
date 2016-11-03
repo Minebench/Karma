@@ -2,6 +2,7 @@ languageFile: 'lang.de.yml'
 pageSize: 10
 topListSize: 5
 karmaPerThx: 1.0
+useParticles: true
 apiUrlName: 'https://api.mojang.com/user/profiles/{0}/names'
 apiUrlUUID: 'https://api.mojang.com/users/profiles/minecraft/{0}'
 sql:
@@ -46,7 +47,7 @@ effects:
   LAVA_POP:
     delay: 4
   MAGIC_CRIT:
-    delay: 10
+    delay: 2
   MOBSPAWNER_FLAMES:
     delay: 10
   NONE:
