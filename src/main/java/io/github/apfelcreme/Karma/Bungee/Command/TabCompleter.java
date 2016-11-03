@@ -116,9 +116,17 @@ public class TabCompleter implements Listener {
                 }
             }
         } else if (plugin.getThxCommandAliases().contains(args[0].replace("/", ""))) {
-            for (ProxiedPlayer player : plugin.getProxy().getPlayers()) {
-                if (!player.equals(sender)) {
-                    event.getSuggestions().add(player.getName());
+            if (args.length == 1) {
+                for (ProxiedPlayer player : plugin.getProxy().getPlayers()) {
+                    if (!player.equals(sender)) {
+                        event.getSuggestions().add(player.getName());
+                    }
+                }
+            } else if (args.length == 2) {
+                for (ProxiedPlayer player : plugin.getProxy().getPlayers()) {
+                    if (!player.equals(sender) && player.getName().startsWith(args[1])) {
+                        event.getSuggestions().add(player.getName());
+                    }
                 }
             }
         }
