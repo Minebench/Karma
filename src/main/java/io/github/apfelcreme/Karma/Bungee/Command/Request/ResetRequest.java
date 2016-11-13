@@ -62,6 +62,10 @@ public class ResetRequest extends Request {
                     transaction.delete();
                     i++;
                 }
+                for (Transaction transaction : relation.getTransactionsReceivedFrom()) {
+                    transaction.delete();
+                    i++;
+                }
             }
             KarmaPlugin.sendMessage(getSender(), KarmaPluginConfig.getInstance().getText("info.karma.reset.reset")
                     .replace("{0}", String.valueOf(i))
