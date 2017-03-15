@@ -42,8 +42,8 @@ public class UseCommand implements SubCommand {
     public void execute(CommandSender sender, String[] args) {
         ProxiedPlayer player = (ProxiedPlayer) sender;
         if (player.hasPermission("Karma.user")) {
-            if (args.length > 1) {
-                Effect effect = Effect.getEffect(args[1]);
+            if (args.length > 0) {
+                Effect effect = Effect.getEffect(args[0]);
                 if (effect != null && KarmaPluginConfig.getInstance().getParticles().values().contains(effect)) {
                     PlayerData playerData = KarmaPlugin.getInstance().getDatabaseController().getPlayerData(player.getUniqueId());
                     if (playerData != null) {
@@ -68,7 +68,7 @@ public class UseCommand implements SubCommand {
                     }
                 } else {
                     KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("error.unknownEffect")
-                            .replace("{0}", args[1]));
+                            .replace("{0}", args[0]));
                 }
             } else {
                 KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("error.wrongUsage.particles.use"));

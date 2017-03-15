@@ -43,17 +43,17 @@ public class SetCommand implements SubCommand {
     public void execute(CommandSender sender, String[] args) {
         ProxiedPlayer player = (ProxiedPlayer) sender;
         if (player.hasPermission("Karma.mod")) {
-            if (args.length > 2) {
-                UUID targetUUID = KarmaPlugin.getInstance().getUUIDByName(args[1]);
+            if (args.length > 1) {
+                UUID targetUUID = KarmaPlugin.getInstance().getUUIDByName(args[0]);
                 if (targetUUID != null) {
-                    Effect effect = Effect.getEffect(args[2]);
+                    Effect effect = Effect.getEffect(args[1]);
                     if (effect != null && KarmaPluginConfig.getInstance().getParticles().values().contains(effect)) {
                         PlayerData playerData = KarmaPlugin.getInstance().getDatabaseController().getPlayerData(targetUUID);
                         if (playerData != null) {
                             playerData.setEffect(effect);
                             playerData.save();
                             KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("info.particles.set.success"));
-                            KarmaPlugin.getInstance().getLogger().info(args[1] + "s Particles were set to "
+                            KarmaPlugin.getInstance().getLogger().info(args[0] + "s Particles were set to "
                                     + effect.getDisplayName() + " by " + player.getName());
                             ProxiedPlayer targetPlayer = ProxyServer.getInstance().getPlayer(targetUUID);
                             if ((targetPlayer != null)
@@ -63,7 +63,7 @@ public class SetCommand implements SubCommand {
                         }
                     } else {
                         KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("error.unknownEffect")
-                                .replace("{0}", args[2]));
+                                .replace("{0}", args[1]));
                     }
                 } else {
                     KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("error.unknownPlayer"));

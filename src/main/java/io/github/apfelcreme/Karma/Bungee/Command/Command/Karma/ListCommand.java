@@ -42,8 +42,8 @@ public class ListCommand implements SubCommand {
         ProxiedPlayer player = (ProxiedPlayer) sender;
         if (player.hasPermission("Karma.user")) {
             UUID targetUUID = player.getUniqueId();
-            if (player.hasPermission("Karma.mod") && args.length > 1) {
-                targetUUID = KarmaPlugin.getInstance().getUUIDByName(args[1]);
+            if (player.hasPermission("Karma.mod") && args.length > 0) {
+                targetUUID = KarmaPlugin.getInstance().getUUIDByName(args[0]);
             }
             if (targetUUID != null) {
                 PlayerData playerData = KarmaPlugin.getInstance().getDatabaseController().getPlayerData(targetUUID);
@@ -51,8 +51,8 @@ public class ListCommand implements SubCommand {
                     List<Relation> relations = new ArrayList<>(playerData.getRelations().values());
                     Collections.sort(relations);
                     int page = 0;
-                    if (args.length > 2 && KarmaPlugin.isNumeric(args[2])) {
-                        page = Integer.parseInt(args[2]) - 1;
+                    if (args.length > 1 && KarmaPlugin.isNumeric(args[1])) {
+                        page = Integer.parseInt(args[1]) - 1;
                     }
                     if (page < 0) {
                         page = 0;
@@ -68,7 +68,7 @@ public class ListCommand implements SubCommand {
                                 .replace("{1}", String.valueOf(maxPages)));
                     } else {
                         KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("info.karma.list.headerSomeoneElse")
-                                .replace("{0}", args[1])
+                                .replace("{0}", args[0])
                                 .replace("{1}", String.valueOf(page + 1))
                                 .replace("{2}", String.valueOf(maxPages)));
                     }

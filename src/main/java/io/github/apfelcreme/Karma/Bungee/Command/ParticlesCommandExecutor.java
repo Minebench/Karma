@@ -8,6 +8,8 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 
+import java.util.Arrays;
+
 /**
  * Copyright (C) 2016 Lord36 aka Apfelcreme
  * <p>
@@ -64,11 +66,9 @@ public class ParticlesCommandExecutor extends Command {
                 final SubCommand finalSubCommand = subCommand;
 
                 // execute the subcommand in a thread
-                ProxyServer.getInstance().getScheduler().runAsync(KarmaPlugin.getInstance(), new Runnable() {
-                    public void run() {
-                        finalSubCommand.execute(commandSender, strings);
-                    }
-                });
+                ProxyServer.getInstance().getScheduler().runAsync(KarmaPlugin.getInstance(),
+                        () -> finalSubCommand.execute(commandSender, Arrays.copyOfRange(strings, 1, strings.length))
+                );
             }
         } else {
             ProxyServer.getInstance().getLogger().info("Command cannot be used from console!");

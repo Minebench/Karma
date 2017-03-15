@@ -43,8 +43,8 @@ public class GiveCommand implements SubCommand {
     public void execute(CommandSender sender, String[] args) {
         ProxiedPlayer player = (ProxiedPlayer) sender;
         if (player.hasPermission("Karma.user")) {
-            if (args.length > 1) {
-                UUID uuid = KarmaPlugin.getInstance().getUUIDByName(args[1]);
+            if (args.length > 0) {
+                UUID uuid = KarmaPlugin.getInstance().getUUIDByName(args[0]);
                 if (uuid != null) {
                     if (!uuid.equals(player.getUniqueId())) {
                         if (ProxyServer.getInstance().getPlayer(uuid) != null) {
@@ -52,14 +52,14 @@ public class GiveCommand implements SubCommand {
                                 Transaction transaction = new Transaction(player.getUniqueId(), uuid);
                                 transaction.save();
                                 KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("info.thx.thxGiven")
-                                        .replace("{0}", args[1])
+                                        .replace("{0}", args[0])
                                         .replace("{1}", new DecimalFormat("0.##").format(transaction.getAmount())));
                                 KarmaPlugin.sendMessage(uuid, KarmaPluginConfig.getInstance().getText("info.thx.thxReceived")
                                         .replace("{0}", sender.getName())
                                         .replace("{1}", new DecimalFormat("0.##").format(transaction.getAmount())));
                             } catch (OncePerDayException e) {
                                 KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("error.oncePerDay")
-                                        .replace("{0}", args[1]));
+                                        .replace("{0}", args[0]));
                             }
                         } else {
                             KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("error.offlinePlayer"));

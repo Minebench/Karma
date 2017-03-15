@@ -43,8 +43,8 @@ public class ResetCommand implements SubCommand {
     public void execute(CommandSender sender, String[] args) {
         ProxiedPlayer player = (ProxiedPlayer) sender;
         if (player.hasPermission("Karma.mod")) {
-            if (args.length > 1) {
-                UUID targetUUID = KarmaPlugin.getInstance().getUUIDByName(args[1]);
+            if (args.length > 0) {
+                UUID targetUUID = KarmaPlugin.getInstance().getUUIDByName(args[0]);
                 if (targetUUID != null) {
                     RequestManager.getInstance().addRequest(player, new ResetRequest(player, targetUUID));
                     KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("info.karma.confirm.confirm"));

@@ -41,8 +41,8 @@ public class InfoCommand implements SubCommand {
         ProxiedPlayer player = (ProxiedPlayer) sender;
         if (player.hasPermission("Karma.user")) {
             UUID targetUUID = player.getUniqueId();
-            if (player.hasPermission("Karma.mod") && args.length > 1) {
-                targetUUID = KarmaPlugin.getInstance().getUUIDByName(args[1]);
+            if (player.hasPermission("Karma.mod") && args.length > 0) {
+                targetUUID = KarmaPlugin.getInstance().getUUIDByName(args[0]);
             }
             if (targetUUID != null) {
                 PlayerData playerData = KarmaPlugin.getInstance().getDatabaseController().getPlayerData(targetUUID);
@@ -52,7 +52,7 @@ public class InfoCommand implements SubCommand {
                                 .replace("{0}", new DecimalFormat("0.##").format(playerData.getKarma())));
                     } else {
                         KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("info.karma.info.infoSomeoneElse")
-                                .replace("{0}", args[1])
+                                .replace("{0}", args[0])
                                 .replace("{1}", new DecimalFormat("0.##").format(playerData.getKarma())));
                     }
                 }
