@@ -1,5 +1,7 @@
 package io.github.apfelcreme.Karma.Bungee.User;
 
+import io.github.apfelcreme.Karma.Bungee.KarmaPluginConfig;
+
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -24,6 +26,11 @@ import java.util.UUID;
  */
 public class Relation implements Comparable<Relation> {
 
+    /**
+     * a day has 86400000 milliseconds
+     */
+    private static final int MILLISECONDS_PER_DAY = 86400000;
+
     private UUID to;
     private List<Transaction> transactionsDoneTo;
     private List<Transaction> transactionsReceivedFrom;
@@ -37,12 +44,21 @@ public class Relation implements Comparable<Relation> {
     /**
      * returns the ratio that describes the relation between the two players.
      * The more karma the sender gives to the to the lower the amount of karma he sends becomes.
+     * This will also take into consideration the frequency that the karma was given in with the
+     * goal to simulate the regeneration of one /thx per week.
      *
      * @return the karma multiplier that is used when the sender sends karma to the to
      */
-    public Double getRatio() {
-        // ratio = (0.4*e)^(-x)
-        return Math.pow(0.4 * Math.E, -1 * transactionsDoneTo.size());
+    public double getRatio() {
+        // decline = (0.4*e)^(-x) + (thx per week)
+        double ratio = Math.pow(0.4 * Math.E, -1 * transactionsDoneTo.size());
+        if (KarmaPluginConfig.getInstance().getConfiguration().getInt("karmaRegenerationDays") > 0) {
+            double perWeek = (new Date().getTime() - getFirstTransactionDate().getTime()) /
+                    (MILLISECONDS_PER_DAY * KarmaPluginConfig.getInstance().getConfiguration().getInt("karmaRegenerationDays") * transactionsDoneTo.size());
+            ratio = ratio + perWeek * (1 - ratio);
+        }
+
+        return ratio > 1 ? 1 : ratio;
     }
 
     /**
@@ -96,6 +112,21 @@ public class Relation implements Comparable<Relation> {
             amount += transaction.getAmount();
         }
         return amount;
+    }
+
+    /**
+     * returns the date of the first transaction the player sent to the receiver
+     *
+     * @return the date of the first transaction done by the relation sender;
+     */
+    public Date getFirstTransactionDate() {
+        Date date = new Date();
+        for (Transaction transaction : transactionsDoneTo) {
+            if (transaction.getDate().getTime() < date.getTime()) {
+                date = transaction.getDate();
+            }
+        }
+        return date;
     }
 
     /**
