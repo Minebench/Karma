@@ -76,7 +76,7 @@ public class SubCommandExecutor extends Command {
 
                 // execute the subcommand in a thread
                 ProxyServer.getInstance().getScheduler().runAsync(KarmaPlugin.getInstance(),
-                        () -> finalSubCommand.execute(commandSender, Arrays.copyOfRange(strings, 1, strings.length))
+                        () -> finalSubCommand.execute(commandSender, strings.length > 0 ? Arrays.copyOfRange(strings, 1, strings.length) : new String[0])
                 );
             }
         } else {
