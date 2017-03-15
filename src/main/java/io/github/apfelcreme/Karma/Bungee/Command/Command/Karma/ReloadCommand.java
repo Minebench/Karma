@@ -6,6 +6,9 @@ import io.github.apfelcreme.Karma.Bungee.KarmaPluginConfig;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Copyright (C) 2016 Lord36 aka Apfelcreme
  * <p>
@@ -42,5 +45,10 @@ public class ReloadCommand implements SubCommand {
         } else {
             KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("error.noPermission"));
         }
+    }
+
+    @Override
+    public List<String> getTabCompletions(CommandSender sender, String[] args) {
+        return new ArrayList<>();
     }
 }

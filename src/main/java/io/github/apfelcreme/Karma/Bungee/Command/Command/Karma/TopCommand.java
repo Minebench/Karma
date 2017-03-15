@@ -8,6 +8,7 @@ import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -55,5 +56,10 @@ public class TopCommand implements SubCommand {
         } else {
             KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("error.noPermission"));
         }
+    }
+
+    @Override
+    public List<String> getTabCompletions(CommandSender sender, String[] args) {
+        return new ArrayList<>();
     }
 }

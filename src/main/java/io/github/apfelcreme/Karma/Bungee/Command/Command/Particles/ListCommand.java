@@ -6,8 +6,11 @@ import io.github.apfelcreme.Karma.Bungee.KarmaPluginConfig;
 import io.github.apfelcreme.Karma.Bungee.Particle.Effect;
 import io.github.apfelcreme.Karma.Bungee.User.PlayerData;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -63,5 +66,10 @@ public class ListCommand implements SubCommand {
         } else {
             KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("error.noPermission"));
         }
+    }
+
+    @Override
+    public List<String> getTabCompletions(CommandSender sender, String[] args) {
+        return new ArrayList<>();
     }
 }

@@ -1,7 +1,16 @@
 package io.github.apfelcreme.Karma.Bungee;
 
-import io.github.apfelcreme.Karma.Bungee.Command.KarmaCommandExecutor;
-import io.github.apfelcreme.Karma.Bungee.Command.ParticlesCommandExecutor;
+import io.github.apfelcreme.Karma.Bungee.Command.Command.Karma.ConfirmCommand;
+import io.github.apfelcreme.Karma.Bungee.Command.Command.Karma.GiveCommand;
+import io.github.apfelcreme.Karma.Bungee.Command.Command.Karma.HelpCommand;
+import io.github.apfelcreme.Karma.Bungee.Command.Command.Karma.InfoCommand;
+import io.github.apfelcreme.Karma.Bungee.Command.Command.Karma.ListCommand;
+import io.github.apfelcreme.Karma.Bungee.Command.Command.Karma.ReloadCommand;
+import io.github.apfelcreme.Karma.Bungee.Command.Command.Karma.ResetCommand;
+import io.github.apfelcreme.Karma.Bungee.Command.Command.Karma.TopCommand;
+import io.github.apfelcreme.Karma.Bungee.Command.Command.Particles.SetCommand;
+import io.github.apfelcreme.Karma.Bungee.Command.Command.Particles.UseCommand;
+import io.github.apfelcreme.Karma.Bungee.Command.SubCommandExecutor;
 import io.github.apfelcreme.Karma.Bungee.Command.TabCompleter;
 import io.github.apfelcreme.Karma.Bungee.Command.ThxCommandExecutor;
 import io.github.apfelcreme.Karma.Bungee.Database.DatabaseController;
@@ -71,17 +80,17 @@ public class KarmaPlugin extends Plugin {
     /**
      * the command executor for /karma
      */
-    private Command karmaCommandExecutor;
+    private SubCommandExecutor karmaCommandExecutor;
 
     /**
      * the command executor for /particles
      */
-    private Command particlesCommandExecutor;
+    private SubCommandExecutor particlesCommandExecutor;
 
     /**
      * the command executor for /thx
      */
-    private Command thxCommandExecutor;
+    private ThxCommandExecutor thxCommandExecutor;
 
     @Override
     public void onEnable() {
@@ -101,9 +110,21 @@ public class KarmaPlugin extends Plugin {
         databaseController = new MySQLController();
 
         // register the commands & listener
-        karmaCommandExecutor = new KarmaCommandExecutor();
-        particlesCommandExecutor = new ParticlesCommandExecutor("particle");
-        thxCommandExecutor = new ThxCommandExecutor("thanks", "ty", "danke");
+        karmaCommandExecutor = new SubCommandExecutor("karma");
+        karmaCommandExecutor.addSubCommand(new ConfirmCommand());
+        karmaCommandExecutor.addSubCommand(new GiveCommand());
+        karmaCommandExecutor.addSubCommand(new HelpCommand());
+        karmaCommandExecutor.addSubCommand(new InfoCommand());
+        karmaCommandExecutor.addSubCommand(new ListCommand());
+        karmaCommandExecutor.addSubCommand(new ReloadCommand());
+        karmaCommandExecutor.addSubCommand(new ResetCommand());
+        karmaCommandExecutor.addSubCommand(new TopCommand());
+        particlesCommandExecutor = new SubCommandExecutor("particles", "particle");
+        particlesCommandExecutor.addSubCommand(new HelpCommand());
+        particlesCommandExecutor.addSubCommand(new ListCommand());
+        particlesCommandExecutor.addSubCommand(new SetCommand());
+        particlesCommandExecutor.addSubCommand(new UseCommand());
+        thxCommandExecutor = new ThxCommandExecutor("thx", "thanks", "ty", "danke");
         getProxy().getPluginManager().registerCommand(this, karmaCommandExecutor);
         getProxy().getPluginManager().registerCommand(this, thxCommandExecutor);
         getProxy().getPluginManager().registerListener(this, new TabCompleter(this));
@@ -148,27 +169,30 @@ public class KarmaPlugin extends Plugin {
     }
 
     /**
-     * returns the command aliases for /karma
+     * returns the executor for the /karma command
      *
-     * @return the command aliases for /karma
+     * @return the executor for /karma
      */
-    public List<String> getKarmaCommandAliases() {
-        List<String> aliases = new ArrayList<>();
-        aliases.add(karmaCommandExecutor.getName());
-        Collections.addAll(aliases, karmaCommandExecutor.getAliases());
-        return aliases;
+    public SubCommandExecutor getKarmaCommand() {
+        return karmaCommandExecutor;
     }
 
     /**
-     * returns the command aliases for /particles
+     * returns the executor for the /particles command
      *
-     * @return the command aliases for /particles
+     * @return the executor for /particles
      */
-    public List<String> getParticlesCommandAliases() {
-        List<String> aliases = new ArrayList<>();
-        aliases.add(particlesCommandExecutor.getName());
-        Collections.addAll(aliases, particlesCommandExecutor.getAliases());
-        return aliases;
+    public SubCommandExecutor getParticlesCommand() {
+        return particlesCommandExecutor;
+    }
+
+    /**
+     * returns the executor for the /thx command
+     *
+     * @return the executor for /thx
+     */
+    public ThxCommandExecutor getThxCommand() {
+        return thxCommandExecutor;
     }
 
     /**
@@ -176,10 +200,10 @@ public class KarmaPlugin extends Plugin {
      *
      * @return the command aliases for /thx
      */
-    public List<String> getThxCommandAliases() {
-        List<String> aliases = new ArrayList<>();
-        aliases.add(thxCommandExecutor.getName());
-        Collections.addAll(aliases, thxCommandExecutor.getAliases());
+    public static Set<String> getCommandAliases(Command command) {
+        Set<String> aliases = new LinkedHashSet<>();
+        aliases.add(command.getName());
+        Collections.addAll(aliases, command.getAliases());
         return aliases;
     }
 

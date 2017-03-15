@@ -9,6 +9,7 @@ import io.github.apfelcreme.Karma.Bungee.User.PlayerData;
 import io.github.apfelcreme.Karma.Bungee.User.Relation;
 import io.github.apfelcreme.Karma.Bungee.User.Transaction;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.util.*;
@@ -57,5 +58,24 @@ public class ResetCommand implements SubCommand {
         } else {
             KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("error.noPermission"));
         }
+    }
+
+    @Override
+    public List<String> getTabCompletions(CommandSender sender, String[] args) {
+        List<String> suggestions = new ArrayList<>();
+        if (sender.hasPermission("Karma.mod")) {
+            if (args.length == 2) {
+                for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
+                        suggestions.add(player.getName());
+                }
+            } else if (args.length == 3) {
+                for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
+                    if (player.getName().startsWith(args[1])) {
+                        suggestions.add(player.getName());
+                    }
+                }
+            }
+        }
+        return suggestions;
     }
 }

@@ -2,6 +2,9 @@ package io.github.apfelcreme.Karma.Bungee.Command;
 
 
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
+
+import java.util.List;
 
 /**
  * Copyright (C) 2016 Lord36 aka Apfelcreme
@@ -29,4 +32,12 @@ public interface SubCommand {
      * @param args the string arguments in an array
      */
     void execute(CommandSender sender, String[] args);
+
+    /**
+     * Get the tab completions for this sub command
+     * @param sender    The sender that tries to tab complete
+     * @param args      The arguments passed by the sender
+     * @return          Te list of completions or an empty one if none should be added
+     */
+    List<String> getTabCompletions(CommandSender sender, String[] args);
 }

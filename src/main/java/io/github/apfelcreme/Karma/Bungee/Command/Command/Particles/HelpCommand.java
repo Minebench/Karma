@@ -63,4 +63,9 @@ public class HelpCommand implements SubCommand {
             KarmaPlugin.sendMessage(sender, ChatColor.translateAlternateColorCodes('&', s.toString()));
         }
     }
+
+    @Override
+    public List<String> getTabCompletions(CommandSender sender, String[] args) {
+        return new ArrayList<>();
+    }
 }

@@ -60,62 +60,22 @@ public class TabCompleter implements Listener {
         ProxiedPlayer sender = (ProxiedPlayer) event.getSender();
         String[] args = event.getCursor().split(" ");
 
-        if (plugin.getKarmaCommandAliases().contains(args[0].replace("/", ""))) {
+        if (KarmaPlugin.getCommandAliases(plugin.getKarmaCommand()).contains(args[0].replace("/", ""))) {
             if (args.length > 1) {
-                KarmaCommandExecutor.Operation operation = KarmaCommandExecutor.Operation.getOperation(args[1]);
-                if (operation != null) {
-                    switch (operation) {
-                        case CONFIRM:
-                        case GIVE:
-                        case HELP:
-                            for (ProxiedPlayer player : plugin.getProxy().getPlayers()) {
-                                event.getSuggestions().add(player.getName());
-                            }
-                        case INFO:
-                        case RESET:
-                        case LIST:
-                            if (sender.hasPermission("Karma.mod")) {
-                                for (ProxiedPlayer player : plugin.getProxy().getPlayers()) {
-                                    event.getSuggestions().add(player.getName());
-                                }
-                            }
-                            break;
-                        default:
-                            break;
-                    }
+                SubCommand subCommand = plugin.getKarmaCommand().getSubCommand(args[1]);
+                if (subCommand != null) {
+                    event.getSuggestions().addAll(subCommand.getTabCompletions(sender, args));
                 }
             }
         } else if (KarmaPluginConfig.getInstance().useParticles()
-                && plugin.getParticlesCommandAliases().contains(args[0].replace("/", ""))) {
+                && KarmaPlugin.getCommandAliases(plugin.getParticlesCommand()).contains(args[0].replace("/", ""))) {
             if (args.length > 1) {
-                ParticlesCommandExecutor.Operation operation = ParticlesCommandExecutor.Operation.getOperation(args[1]);
-                if (operation != null) {
-                    switch (operation) {
-                        case SET:
-                            if (sender.hasPermission("Karma.mod")) {
-                                if (args.length == 2) {
-                                    for (ProxiedPlayer player : plugin.getProxy().getPlayers()) {
-                                        event.getSuggestions().add(player.getName());
-                                    }
-                                } else if (args.length == 3) {
-                                    for (Effect effect : KarmaPluginConfig.getInstance().getParticles().values()) {
-                                        event.getSuggestions().add(effect.getDisplayName());
-                                    }
-                                }
-                            }
-                            break;
-                        case USE:
-                            for (Effect effect : KarmaPluginConfig.getInstance().getParticles().values()) {
-                                event.getSuggestions().add(effect.getDisplayName());
-                            }
-                            break;
-                        default:
-                            break;
-                    }
-
+                SubCommand subCommand = plugin.getParticlesCommand().getSubCommand(args[1]);
+                if (subCommand != null) {
+                    event.getSuggestions().addAll(subCommand.getTabCompletions(sender, args));
                 }
             }
-        } else if (plugin.getThxCommandAliases().contains(args[0].replace("/", ""))) {
+        } else if (KarmaPlugin.getCommandAliases(plugin.getThxCommand()).contains(args[0].replace("/", ""))) {
             if (args.length == 1) {
                 for (ProxiedPlayer player : plugin.getProxy().getPlayers()) {
                     if (!player.equals(sender)) {

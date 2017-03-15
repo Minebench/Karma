@@ -9,6 +9,9 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Copyright (C) 2016 Lord36 aka Apfelcreme
@@ -28,39 +31,45 @@ import java.util.Arrays;
  *
  * @author Lord36 aka Apfelcreme
  */
-public class ParticlesCommandExecutor extends Command {
+public class SubCommandExecutor extends Command {
 
-    public ParticlesCommandExecutor(String... aliases) {
-        super("particles", null, aliases);
+    private Map<String, SubCommand> subCommands = new HashMap<>();
+
+    public SubCommandExecutor(String name, String... aliases) {
+        super(name, null, aliases);
+    }
+
+    /**
+     * Register a sub command with this executor
+     *
+     * @param subCommand The SubCommand to register
+     */
+    public void addSubCommand(SubCommand subCommand) {
+        String name = subCommand.getClass().getSimpleName().substring(0, subCommand.getClass().getSimpleName().lastIndexOf("Command"));
+        subCommands.put(name.toLowerCase(), subCommand);
+    }
+
+    /**
+     * Get a sub command registered with this executor
+     *
+     * @param name The name of the registered sub command; null if not registered
+     */
+    public SubCommand getSubCommand(String name) {
+        return subCommands.get(name.toLowerCase());
     }
 
     @Override
     public void execute(final CommandSender commandSender, final String[] strings) {
         if (commandSender instanceof ProxiedPlayer) {
-            SubCommand subCommand = null;
+            SubCommand subCommand;
             if (strings.length > 0) {
-                Operation operation = Operation.getOperation(strings[0]);
-                if (operation != null) {
-                    switch (operation) {
-                        case HELP:
-                            subCommand = new HelpCommand();
-                            break;
-                        case LIST:
-                            subCommand = new ListCommand();
-                            break;
-                        case SET:
-                            subCommand = new SetCommand();
-                            break;
-                        case USE:
-                            subCommand = new UseCommand();
-                            break;
-                    }
-                } else {
+                subCommand = subCommands.get(strings[0]);
+                if (subCommand == null) {
                     KarmaPlugin.sendMessage(commandSender, KarmaPluginConfig.getInstance().getText("error.unknownCommand")
                             .replace("{0}", strings[0]));
                 }
             } else {
-                subCommand = new HelpCommand();
+                subCommand = subCommands.get("help");
             }
             if (subCommand != null) {
                 final SubCommand finalSubCommand = subCommand;
@@ -73,32 +82,5 @@ public class ParticlesCommandExecutor extends Command {
         } else {
             ProxyServer.getInstance().getLogger().info("Command cannot be used from console!");
         }
-    }
-
-    /**
-     * a list of available subcommands
-     */
-    public enum Operation {
-
-        HELP,
-        LIST,
-        SET,
-        USE;
-
-        /**
-         * returns the matching operation
-         *
-         * @param key the key
-         * @return the matching operation
-         */
-        public static Operation getOperation(String key) {
-            for (Operation operation : Operation.values()) {
-                if (operation.name().equalsIgnoreCase(key)) {
-                    return operation;
-                }
-            }
-            return null;
-        }
-
     }
 }

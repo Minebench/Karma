@@ -5,6 +5,8 @@ import io.github.apfelcreme.Karma.Bungee.KarmaPlugin;
 import io.github.apfelcreme.Karma.Bungee.KarmaPluginConfig;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.config.Configuration;
 
 import java.util.ArrayList;
@@ -62,5 +64,10 @@ public class HelpCommand implements SubCommand {
             KarmaPlugin.sendMessage(sender, ChatColor.translateAlternateColorCodes('&', s.toString()));
         }
 
+    }
+
+    @Override
+    public List<String> getTabCompletions(CommandSender sender, String[] args) {
+        return new ArrayList<>();
     }
 }

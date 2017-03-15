@@ -11,6 +11,8 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -76,5 +78,24 @@ public class GiveCommand implements SubCommand {
         } else {
             KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("error.noPermission"));
         }
+    }
+
+    @Override
+    public List<String> getTabCompletions(CommandSender sender, String[] args) {
+        List<String> suggestions = new ArrayList<>();
+        if (args.length == 2) {
+            for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
+                if (!player.equals(sender)) {
+                    suggestions.add(player.getName());
+                }
+            }
+        } else if (args.length == 3) {
+            for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
+                if (!player.equals(sender) && player.getName().startsWith(args[1])) {
+                    suggestions.add(player.getName());
+                }
+            }
+        }
+        return suggestions;
     }
 }

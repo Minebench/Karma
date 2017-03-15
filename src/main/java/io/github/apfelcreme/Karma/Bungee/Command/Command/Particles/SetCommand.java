@@ -11,6 +11,8 @@ import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -28,14 +30,12 @@ import java.util.UUID;
  * <p>
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, see <http://www.gnu.org/licenses/>.
- *
  * @author Lord36 aka Apfelcreme
  */
 public class SetCommand implements SubCommand {
 
     /**
      * executes a subcommand
-     *
      * @param sender the sender
      * @param args   the string arguments in an array
      */
@@ -74,5 +74,22 @@ public class SetCommand implements SubCommand {
         } else {
             KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("error.noPermission"));
         }
+    }
+
+    @Override
+    public List<String> getTabCompletions(CommandSender sender, String[] args) {
+        List<String> suggestions = new ArrayList<>();
+        if (sender.hasPermission("Karma.mod")) {
+            if (args.length == 2) {
+                for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
+                    suggestions.add(player.getName());
+                }
+            } else if (args.length == 3) {
+                for (Effect effect : KarmaPluginConfig.getInstance().getParticles().values()) {
+                    suggestions.add(effect.getDisplayName());
+                }
+            }
+        }
+        return suggestions;
     }
 }

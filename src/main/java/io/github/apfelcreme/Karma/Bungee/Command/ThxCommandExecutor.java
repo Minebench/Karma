@@ -27,8 +27,8 @@ import net.md_5.bungee.api.plugin.Command;
  */
 public class ThxCommandExecutor extends Command {
 
-    public ThxCommandExecutor(String... aliases) {
-        super("thx", null, aliases);
+    public ThxCommandExecutor(String name, String... aliases) {
+        super(name, null, aliases);
     }
 
     @Override
