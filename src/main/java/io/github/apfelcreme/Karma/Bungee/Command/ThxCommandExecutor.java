@@ -1,6 +1,6 @@
 package io.github.apfelcreme.Karma.Bungee.Command;
 
-import io.github.apfelcreme.Karma.Bungee.Command.Command.Thx.ThxCommand;
+import io.github.apfelcreme.Karma.Bungee.Command.Command.Karma.GiveCommand;
 import io.github.apfelcreme.Karma.Bungee.KarmaPlugin;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
@@ -34,13 +34,9 @@ public class ThxCommandExecutor extends Command {
     @Override
     public void execute(final CommandSender commandSender, final String[] strings) {
         if (commandSender instanceof ProxiedPlayer) {
-            ProxyServer.getInstance().getScheduler().runAsync(KarmaPlugin.getInstance(), new Runnable() {
-                @Override
-                public void run() {
-                    SubCommand subCommand = new ThxCommand();
-                    subCommand.execute(commandSender, strings);
-                }
-            });
+            ProxyServer.getInstance().getScheduler().runAsync(KarmaPlugin.getInstance(),
+                    () -> new GiveCommand().execute(commandSender, strings)
+            );
         }
     }
 }
