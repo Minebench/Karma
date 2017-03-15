@@ -35,7 +35,7 @@ public class ThxCommandExecutor extends Command {
     public void execute(final CommandSender commandSender, final String[] strings) {
         if (commandSender instanceof ProxiedPlayer) {
             ProxyServer.getInstance().getScheduler().runAsync(KarmaPlugin.getInstance(),
-                    () -> new GiveCommand().execute(commandSender, strings)
+                    () -> KarmaPlugin.getInstance().getKarmaCommand().getSubCommand("give").execute(commandSender, strings)
             );
         }
     }
