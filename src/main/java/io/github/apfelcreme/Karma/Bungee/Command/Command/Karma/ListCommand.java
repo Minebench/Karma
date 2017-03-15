@@ -50,7 +50,11 @@ public class ListCommand implements SubCommand {
                 PlayerData playerData = KarmaPlugin.getInstance().getDatabaseController().getPlayerData(targetUUID);
                 if (playerData != null) {
                     List<Relation> relations = new ArrayList<>(playerData.getRelations().values());
-                    Collections.sort(relations);
+                    if (args.length > 2 && "received".equalsIgnoreCase(args[2])) {
+                        Collections.sort(relations, (o1, o2) -> Double.compare(o2.getAmountReceived(), o1.getAmountReceived()));
+                    } else {
+                        Collections.sort(relations);
+                    }
                     int page = 0;
                     if (args.length > 1 && KarmaPlugin.isNumeric(args[1])) {
                         page = Integer.parseInt(args[1]) - 1;
