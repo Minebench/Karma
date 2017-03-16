@@ -52,7 +52,7 @@ public class Relation implements Comparable<Relation> {
     public double getRatio() {
         // decline = (0.4*e)^(-x) + (thx per week)
         double ratio = Math.pow(0.4 * Math.E, -1 * transactionsDoneTo.size());
-        if (KarmaPluginConfig.getInstance().getConfiguration().getInt("karmaRegenerationDays") > 0) {
+        if (transactionsDoneTo.size() > 0 && KarmaPluginConfig.getInstance().getConfiguration().getInt("karmaRegenerationDays") > 0) {
             double perWeek = (new Date().getTime() - getFirstTransactionDate().getTime()) /
                     (MILLISECONDS_PER_DAY * KarmaPluginConfig.getInstance().getConfiguration().getInt("karmaRegenerationDays") * transactionsDoneTo.size());
             ratio = ratio + perWeek * (1 - ratio);
