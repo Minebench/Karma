@@ -50,13 +50,21 @@ public class Relation implements Comparable<Relation> {
      * @return the karma multiplier that is used when the sender sends karma to the to
      */
     public double getRatio() {
-        // decline = (0.4*e)^(-x) + (thx per week)
-        double ratio = Math.pow(0.4 * Math.E, -1 * transactionsDoneTo.size());
-        if (transactionsDoneTo.size() > 0 && KarmaPluginConfig.getInstance().getConfiguration().getInt("karmaRegenerationDays") > 0) {
-            double perWeek = (new Date().getTime() - getFirstTransactionDate().getTime()) /
-                    (MILLISECONDS_PER_DAY * KarmaPluginConfig.getInstance().getConfiguration().getInt("karmaRegenerationDays") * transactionsDoneTo.size());
-            ratio = ratio + perWeek * (1 - ratio);
+        if (transactionsDoneTo.isEmpty()) {
+            return 1;
         }
+
+        // decline = (0.4*e)^(-x * (1 - thx per week))
+        int regenerationDays = KarmaPluginConfig.getInstance().getConfiguration().getInt("karmaRegenerationDays");
+        double perWeek;
+        if (regenerationDays > 0) {
+            perWeek = (new Date().getTime() - getFirstTransactionDate().getTime()) /
+                    (MILLISECONDS_PER_DAY * regenerationDays * transactionsDoneTo.size());
+            perWeek = perWeek > 0 && perWeek < 1 ? perWeek : 1;
+        } else {
+            perWeek = 0;
+        }
+        double ratio = Math.pow(0.4 * Math.E, -1 * transactionsDoneTo.size() * (1 - perWeek));
 
         return ratio > 1 ? 1 : ratio;
     }
