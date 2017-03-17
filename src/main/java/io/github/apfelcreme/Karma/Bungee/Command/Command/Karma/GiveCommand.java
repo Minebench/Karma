@@ -2,6 +2,7 @@ package io.github.apfelcreme.Karma.Bungee.Command.Command.Karma;
 
 import io.github.apfelcreme.Karma.Bungee.Command.SubCommand;
 import io.github.apfelcreme.Karma.Bungee.Command.TabCompleter;
+import io.github.apfelcreme.Karma.Bungee.Exception.InsaneKarmaAmountException;
 import io.github.apfelcreme.Karma.Bungee.Exception.OncePerDayException;
 import io.github.apfelcreme.Karma.Bungee.KarmaPlugin;
 import io.github.apfelcreme.Karma.Bungee.KarmaPluginConfig;
@@ -62,6 +63,12 @@ public class GiveCommand implements SubCommand {
                             } catch (OncePerDayException e) {
                                 KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("error.oncePerDay")
                                         .replace("{0}", args[0]));
+                            } catch (InsaneKarmaAmountException e) {
+                                KarmaPlugin.getInstance().getLogger().warning("Insane karma amount: " + e.getTransaction());
+                                KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("error.insaneKarmaAmount")
+                                        .replace("{0}", args[0])
+                                        .replace("{1}", String.valueOf(e.getTransaction().getAmount()))
+                                );
                             }
                         } else {
                             KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("error.offlinePlayer"));

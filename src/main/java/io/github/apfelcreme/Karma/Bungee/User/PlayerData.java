@@ -112,7 +112,7 @@ public class PlayerData {
      * @return the amount of karma the player currently has
      */
     public double getKarma() {
-        Double karma = 0.0;
+        double karma = 0.0;
         for (Transaction transaction : transactionsReceived) {
             karma += transaction.getAmount();
         }

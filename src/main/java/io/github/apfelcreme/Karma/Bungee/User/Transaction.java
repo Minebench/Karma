@@ -1,5 +1,6 @@
 package io.github.apfelcreme.Karma.Bungee.User;
 
+import io.github.apfelcreme.Karma.Bungee.Exception.InsaneKarmaAmountException;
 import io.github.apfelcreme.Karma.Bungee.Exception.OncePerDayException;
 import io.github.apfelcreme.Karma.Bungee.KarmaPlugin;
 import io.github.apfelcreme.Karma.Bungee.KarmaPluginConfig;
@@ -34,10 +35,10 @@ public class Transaction {
     private int id;
     private UUID sender;
     private UUID receiver;
-    private Double amount;
+    private double amount;
     private Date date;
 
-    public Transaction(int id, UUID sender, UUID receiver, Double amount, Date date) {
+    public Transaction(int id, UUID sender, UUID receiver, double amount, Date date) {
         this.id = id;
         this.sender = sender;
         this.receiver = receiver;
@@ -55,7 +56,7 @@ public class Transaction {
      * saves the transaction
      * @param commandSender The sender that initiated this save
      */
-    public void save(CommandSender commandSender) throws OncePerDayException {
+    public void save(CommandSender commandSender) throws OncePerDayException, InsaneKarmaAmountException {
         PlayerData senderData = KarmaPlugin.getInstance().getDatabaseController().getPlayerData(sender);
         if (senderData == null) {
             senderData = new PlayerData(sender, null, true, new ArrayList<Transaction>(), new ArrayList<Transaction>());
@@ -75,8 +76,7 @@ public class Transaction {
         }
         amount = KarmaPluginConfig.getInstance().getConfiguration().getDouble("karmaPerThx") * senderData.getRelation(receiver).getRatio();
         if (amount < 0 || amount > KarmaPluginConfig.getInstance().getConfiguration().getDouble("karmaPerThx")) {
-            KarmaPlugin.getInstance().getLogger().warning("Transaction (" + sender + " -> " + receiver + ") had amount of " + amount + "!");
-            amount = 0.0;
+            throw new InsaneKarmaAmountException(this);
         }
         id = KarmaPlugin.getInstance().getDatabaseController().insertTransaction(this);
         KarmaPlugin.getInstance().getLogger().info("Transaction (" + sender + " -> " + receiver + " = " + amount + ") saved!");
@@ -138,7 +138,7 @@ public class Transaction {
      *
      * @return the amount of karma that was sent
      */
-    public Double getAmount() {
+    public double getAmount() {
         return amount;
     }
 
@@ -164,5 +164,10 @@ public class Transaction {
     @Override
     public int hashCode() {
         return id;
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + " (" + getSender() + " -> " + getReceiver() + " = " + getAmount() + ")";
     }
 }
