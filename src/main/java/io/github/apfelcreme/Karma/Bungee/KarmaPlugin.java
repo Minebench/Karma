@@ -1,15 +1,5 @@
 package io.github.apfelcreme.Karma.Bungee;
 
-import io.github.apfelcreme.Karma.Bungee.Command.Command.Karma.ConfirmCommand;
-import io.github.apfelcreme.Karma.Bungee.Command.Command.Karma.GiveCommand;
-import io.github.apfelcreme.Karma.Bungee.Command.Command.Karma.HelpCommand;
-import io.github.apfelcreme.Karma.Bungee.Command.Command.Karma.InfoCommand;
-import io.github.apfelcreme.Karma.Bungee.Command.Command.Karma.ListCommand;
-import io.github.apfelcreme.Karma.Bungee.Command.Command.Karma.ReloadCommand;
-import io.github.apfelcreme.Karma.Bungee.Command.Command.Karma.ResetCommand;
-import io.github.apfelcreme.Karma.Bungee.Command.Command.Karma.TopCommand;
-import io.github.apfelcreme.Karma.Bungee.Command.Command.Particles.SetCommand;
-import io.github.apfelcreme.Karma.Bungee.Command.Command.Particles.UseCommand;
 import io.github.apfelcreme.Karma.Bungee.Command.SubCommandExecutor;
 import io.github.apfelcreme.Karma.Bungee.Command.TabCompleter;
 import io.github.apfelcreme.Karma.Bungee.Command.ThxCommandExecutor;
@@ -111,19 +101,19 @@ public class KarmaPlugin extends Plugin {
 
         // register the commands & listener
         karmaCommandExecutor = new SubCommandExecutor("karma");
-        karmaCommandExecutor.addSubCommand(new ConfirmCommand());
-        karmaCommandExecutor.addSubCommand(new GiveCommand());
-        karmaCommandExecutor.addSubCommand(new HelpCommand());
-        karmaCommandExecutor.addSubCommand(new InfoCommand());
-        karmaCommandExecutor.addSubCommand(new ListCommand());
-        karmaCommandExecutor.addSubCommand(new ReloadCommand());
-        karmaCommandExecutor.addSubCommand(new ResetCommand());
-        karmaCommandExecutor.addSubCommand(new TopCommand());
+        karmaCommandExecutor.addSubCommand(new io.github.apfelcreme.Karma.Bungee.Command.Command.Karma.ConfirmCommand());
+        karmaCommandExecutor.addSubCommand(new io.github.apfelcreme.Karma.Bungee.Command.Command.Karma.GiveCommand());
+        karmaCommandExecutor.addSubCommand(new io.github.apfelcreme.Karma.Bungee.Command.Command.Karma.HelpCommand());
+        karmaCommandExecutor.addSubCommand(new io.github.apfelcreme.Karma.Bungee.Command.Command.Karma.InfoCommand());
+        karmaCommandExecutor.addSubCommand(new io.github.apfelcreme.Karma.Bungee.Command.Command.Karma.ListCommand());
+        karmaCommandExecutor.addSubCommand(new io.github.apfelcreme.Karma.Bungee.Command.Command.Karma.ReloadCommand());
+        karmaCommandExecutor.addSubCommand(new io.github.apfelcreme.Karma.Bungee.Command.Command.Karma.ResetCommand());
+        karmaCommandExecutor.addSubCommand(new io.github.apfelcreme.Karma.Bungee.Command.Command.Karma.TopCommand());
         particlesCommandExecutor = new SubCommandExecutor("particles", "particle");
-        particlesCommandExecutor.addSubCommand(new HelpCommand());
-        particlesCommandExecutor.addSubCommand(new ListCommand());
-        particlesCommandExecutor.addSubCommand(new SetCommand());
-        particlesCommandExecutor.addSubCommand(new UseCommand());
+        particlesCommandExecutor.addSubCommand(new io.github.apfelcreme.Karma.Bungee.Command.Command.Particles.HelpCommand());
+        particlesCommandExecutor.addSubCommand(new io.github.apfelcreme.Karma.Bungee.Command.Command.Particles.ListCommand());
+        particlesCommandExecutor.addSubCommand(new io.github.apfelcreme.Karma.Bungee.Command.Command.Particles.SetCommand());
+        particlesCommandExecutor.addSubCommand(new io.github.apfelcreme.Karma.Bungee.Command.Command.Particles.UseCommand());
         thxCommandExecutor = new ThxCommandExecutor("thx", "thanks", "ty", "danke");
         getProxy().getPluginManager().registerCommand(this, karmaCommandExecutor);
         getProxy().getPluginManager().registerCommand(this, thxCommandExecutor);
