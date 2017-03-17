@@ -74,6 +74,10 @@ public class Transaction {
             throw new OncePerDayException(senderData.getRelation(receiver));
         }
         amount = KarmaPluginConfig.getInstance().getConfiguration().getDouble("karmaPerThx") * senderData.getRelation(receiver).getRatio();
+        if (amount < 0 || amount > KarmaPluginConfig.getInstance().getConfiguration().getDouble("karmaPerThx")) {
+            KarmaPlugin.getInstance().getLogger().warning("Transaction (" + sender + " -> " + receiver + ") had amount of " + amount + "!");
+            amount = 0.0;
+        }
         id = KarmaPlugin.getInstance().getDatabaseController().insertTransaction(this);
         KarmaPlugin.getInstance().getLogger().info("Transaction (" + sender + " -> " + receiver + " = " + amount + ") saved!");
 
