@@ -235,6 +235,10 @@ public class KarmaPlugin extends Plugin {
      * @return his name
      */
     public String getNameByUUID(UUID uuid) {
+        ProxiedPlayer player = getProxy().getPlayer(uuid);
+        if (player != null) {
+            return player.getName();
+        }
         String name = null;
         if (uuidDb != null) {
             name = uuidDb.getStorage().getNameByUUID(uuid);
@@ -278,6 +282,10 @@ public class KarmaPlugin extends Plugin {
      * @return his uuid
      */
     public UUID getUUIDByName(String name) {
+        ProxiedPlayer player = getProxy().getPlayer(name);
+        if (player != null) {
+            return player.getUniqueId();
+        }
         UUID uuid = null;
         if (uuidDb != null) {
             String uuidString = uuidDb.getStorage().getUUIDByName(name, false);
