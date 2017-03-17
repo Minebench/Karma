@@ -3,6 +3,7 @@ package io.github.apfelcreme.Karma.Bungee.Command.Command.Karma;
 import io.github.apfelcreme.Karma.Bungee.Command.Request.RequestManager;
 import io.github.apfelcreme.Karma.Bungee.Command.Request.ResetRequest;
 import io.github.apfelcreme.Karma.Bungee.Command.SubCommand;
+import io.github.apfelcreme.Karma.Bungee.Command.TabCompleter;
 import io.github.apfelcreme.Karma.Bungee.KarmaPlugin;
 import io.github.apfelcreme.Karma.Bungee.KarmaPluginConfig;
 import net.md_5.bungee.api.CommandSender;
@@ -62,15 +63,9 @@ public class ResetCommand implements SubCommand {
         List<String> suggestions = new ArrayList<>();
         if (sender.hasPermission("karma.command.karma.reset")) {
             if (args.length == 2) {
-                for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
-                        suggestions.add(player.getName());
-                }
+                suggestions.addAll(TabCompleter.getPlayers(sender));
             } else if (args.length == 3) {
-                for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
-                    if (player.getName().toLowerCase().startsWith(args[1].toLowerCase())) {
-                        suggestions.add(player.getName());
-                    }
-                }
+                suggestions.addAll(TabCompleter.getPlayers(sender, args[2]));
             }
         }
         return suggestions;

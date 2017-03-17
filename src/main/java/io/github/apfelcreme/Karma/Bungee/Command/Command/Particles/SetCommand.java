@@ -3,6 +3,7 @@ package io.github.apfelcreme.Karma.Bungee.Command.Command.Particles;
 import de.themoep.vnpbungee.VNPBungee;
 import io.github.apfelcreme.Karma.Bungee.BukkitMessenger;
 import io.github.apfelcreme.Karma.Bungee.Command.SubCommand;
+import io.github.apfelcreme.Karma.Bungee.Command.TabCompleter;
 import io.github.apfelcreme.Karma.Bungee.KarmaPlugin;
 import io.github.apfelcreme.Karma.Bungee.KarmaPluginConfig;
 import io.github.apfelcreme.Karma.Bungee.Particle.Effect;
@@ -81,9 +82,7 @@ public class SetCommand implements SubCommand {
         List<String> suggestions = new ArrayList<>();
         if (sender.hasPermission("karma.command.particles.set")) {
             if (args.length == 2) {
-                for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
-                    suggestions.add(player.getName());
-                }
+                suggestions.addAll(TabCompleter.getPlayers(sender));
             } else if (args.length == 3) {
                 for (Effect effect : KarmaPluginConfig.getInstance().getParticles().values()) {
                     suggestions.add(effect.getDisplayName());

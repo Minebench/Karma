@@ -1,6 +1,7 @@
 package io.github.apfelcreme.Karma.Bungee.Command.Command.Karma;
 
 import io.github.apfelcreme.Karma.Bungee.Command.SubCommand;
+import io.github.apfelcreme.Karma.Bungee.Command.TabCompleter;
 import io.github.apfelcreme.Karma.Bungee.KarmaPlugin;
 import io.github.apfelcreme.Karma.Bungee.KarmaPluginConfig;
 import io.github.apfelcreme.Karma.Bungee.User.PlayerData;
@@ -106,17 +107,9 @@ public class ListCommand implements SubCommand {
         List<String> suggestions = new ArrayList<>();
         if (sender.hasPermission("karma.command.karma.list.others")) {
             if (args.length == 2) {
-                for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
-                    if (!player.equals(sender)) {
-                        suggestions.add(player.getName());
-                    }
-                }
+                suggestions.addAll(TabCompleter.getPlayers(sender));
             } else if (args.length == 3) {
-                for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
-                    if (!player.equals(sender) && player.getName().toLowerCase().startsWith(args[1].toLowerCase())) {
-                        suggestions.add(player.getName());
-                    }
-                }
+                suggestions.addAll(TabCompleter.getPlayers(sender, args[2]));
             }
         }
         return suggestions;

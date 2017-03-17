@@ -1,15 +1,21 @@
 package io.github.apfelcreme.Karma.Bungee.Command;
 
+import de.themoep.vnpbungee.VNPBungee;
 import io.github.apfelcreme.Karma.Bungee.KarmaPlugin;
 import io.github.apfelcreme.Karma.Bungee.KarmaPluginConfig;
 import io.github.apfelcreme.Karma.Bungee.Particle.Effect;
+import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.TabCompleteEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import net.md_5.bungee.event.EventPriority;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * Copyright (C) 2016 Lord36 aka Apfelcreme
@@ -102,21 +108,40 @@ public class TabCompleter implements Listener {
             }
         } else if (KarmaPlugin.getCommandAliases(plugin.getThxCommand()).contains(args[0].replace("/", ""))) {
             if (args.length == 1) {
-                for (ProxiedPlayer player : plugin.getProxy().getPlayers()) {
-                    if (!player.equals(sender)) {
-                        event.getSuggestions().add(player.getName());
-                    }
-                }
+                event.getSuggestions().addAll(TabCompleter.getPlayers(sender));
             } else if (args.length == 2) {
-                for (ProxiedPlayer player : plugin.getProxy().getPlayers()) {
-                    if (!player.equals(sender) && player.getName().startsWith(args[1])) {
-                        event.getSuggestions().add(player.getName());
-                    }
-                }
+                event.getSuggestions().addAll(TabCompleter.getPlayers(sender, args[1]));
             }
         }
 
         Collections.sort(event.getSuggestions());
 
+    }
+
+    public static Collection<String> getPlayers(CommandSender sender) {
+        List<String> players = new ArrayList<>();
+        VNPBungee vnpBungee = VNPBungee.getInstance();
+        for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
+            if (vnpBungee == null || !(sender instanceof ProxiedPlayer) || vnpBungee.canSee((ProxiedPlayer) sender, player)) {
+                players.add(player.getName());
+            }
+        }
+        return players;
+    }
+
+    public static Collection<String> getPlayers(CommandSender sender, String... starts) {
+        if (starts.length > 0) {
+            List<String> players = new ArrayList<>();
+            for (String playerName : getPlayers(sender)) {
+                for (String start : starts) {
+                    if (playerName.toLowerCase().startsWith(start.toLowerCase())) {
+                        players.add(playerName);
+                    }
+                }
+            }
+            return players;
+        } else {
+            return getPlayers(sender);
+        }
     }
 }
