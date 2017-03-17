@@ -1,6 +1,7 @@
 languageFile: 'lang.de.yml'
 pageSize: 10
 topListSize: 5
+thxCooldown: 1440
 karmaPerThx: 1.0
 karmaRegenerationDays: 7
 useParticles: true

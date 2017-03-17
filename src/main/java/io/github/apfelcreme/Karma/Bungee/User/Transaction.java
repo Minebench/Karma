@@ -3,6 +3,9 @@ package io.github.apfelcreme.Karma.Bungee.User;
 import io.github.apfelcreme.Karma.Bungee.Exception.OncePerDayException;
 import io.github.apfelcreme.Karma.Bungee.KarmaPlugin;
 import io.github.apfelcreme.Karma.Bungee.KarmaPluginConfig;
+import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,11 +31,6 @@ import java.util.UUID;
  */
 public class Transaction {
 
-    /**
-     * a day has 86400000 milliseconds
-     */
-    private static final int MILLISECONDS_PER_DAY = 86400000;
-
     private int id;
     private UUID sender;
     private UUID receiver;
@@ -55,8 +53,9 @@ public class Transaction {
 
     /**
      * saves the transaction
+     * @param commandSender The sender that initiated this save
      */
-    public void save() throws OncePerDayException {
+    public void save(CommandSender commandSender) throws OncePerDayException {
         PlayerData senderData = KarmaPlugin.getInstance().getDatabaseController().getPlayerData(sender);
         if (senderData == null) {
             senderData = new PlayerData(sender, null, true, new ArrayList<Transaction>(), new ArrayList<Transaction>());
@@ -70,7 +69,8 @@ public class Transaction {
         }
 
         if ((senderData.getRelation(receiver) != null)
-                && (new Date().getTime() < (senderData.getRelation(receiver).getLastTransactionDate().getTime() + MILLISECONDS_PER_DAY))) {
+                && !commandSender.hasPermission("karma.command.give.bypasscooldown")
+                && new Date().getTime() < (senderData.getRelation(receiver).getLastTransactionDate().getTime() + KarmaPluginConfig.getInstance().getConfiguration().getInt("thxCooldown") * 60 * 1000)) {
             throw new OncePerDayException(senderData.getRelation(receiver));
         }
         amount = KarmaPluginConfig.getInstance().getConfiguration().getDouble("karmaPerThx") * senderData.getRelation(receiver).getRatio();

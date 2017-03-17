@@ -51,7 +51,7 @@ public class GiveCommand implements SubCommand {
                         if (ProxyServer.getInstance().getPlayer(uuid) != null) {
                             try {
                                 Transaction transaction = new Transaction(player.getUniqueId(), uuid);
-                                transaction.save();
+                                transaction.save(sender);
                                 KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("info.thx.thxGiven")
                                         .replace("{0}", args[0])
                                         .replace("{1}", new DecimalFormat("0.##").format(transaction.getAmount())));
