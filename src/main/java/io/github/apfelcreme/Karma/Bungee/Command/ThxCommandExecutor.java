@@ -1,6 +1,5 @@
 package io.github.apfelcreme.Karma.Bungee.Command;
 
-import io.github.apfelcreme.Karma.Bungee.Command.Command.Karma.GiveCommand;
 import io.github.apfelcreme.Karma.Bungee.KarmaPlugin;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;

@@ -1,6 +1,5 @@
 package io.github.apfelcreme.Karma.Bungee.Command;
 
-import io.github.apfelcreme.Karma.Bungee.Command.Command.Particles.*;
 import io.github.apfelcreme.Karma.Bungee.KarmaPlugin;
 import io.github.apfelcreme.Karma.Bungee.KarmaPluginConfig;
 import net.md_5.bungee.api.CommandSender;
@@ -10,7 +9,6 @@ import net.md_5.bungee.api.plugin.Command;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
