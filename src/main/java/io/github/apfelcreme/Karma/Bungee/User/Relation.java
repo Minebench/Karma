@@ -60,11 +60,11 @@ public class Relation implements Comparable<Relation> {
         if (regenerationDays > 0) {
             perWeek = (new Date().getTime() - getFirstTransactionDate().getTime()) /
                     (MILLISECONDS_PER_DAY * regenerationDays * transactionsDoneTo.size());
-            perWeek = perWeek > 0 && perWeek < 1 ? perWeek : 1;
+            perWeek = perWeek > 0 ? perWeek : 0;
         } else {
             perWeek = 0;
         }
-        double ratio = Math.pow(0.4 * Math.E, -1 * transactionsDoneTo.size() * (1 - perWeek));
+        double ratio = Math.pow(0.4 * Math.E, -1 * transactionsDoneTo.size() / perWeek);
 
         return ratio > 1 ? 1 : ratio;
     }
