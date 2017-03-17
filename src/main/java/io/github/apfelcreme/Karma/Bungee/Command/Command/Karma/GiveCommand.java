@@ -50,23 +50,24 @@ public class GiveCommand implements SubCommand {
                 UUID uuid = KarmaPlugin.getInstance().getUUIDByName(args[0]);
                 if (uuid != null) {
                     if (!uuid.equals(player.getUniqueId())) {
-                        if (ProxyServer.getInstance().getPlayer(uuid) != null) {
+                        ProxiedPlayer receiver = ProxyServer.getInstance().getPlayer(uuid);
+                        if (receiver != null) {
                             try {
                                 Transaction transaction = new Transaction(player.getUniqueId(), uuid);
                                 transaction.save(sender);
                                 KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("info.thx.thxGiven")
-                                        .replace("{0}", args[0])
+                                        .replace("{0}", receiver.getName())
                                         .replace("{1}", new DecimalFormat("0.##").format(transaction.getAmount())));
-                                KarmaPlugin.sendMessage(uuid, KarmaPluginConfig.getInstance().getText("info.thx.thxReceived")
+                                KarmaPlugin.sendMessage(receiver, KarmaPluginConfig.getInstance().getText("info.thx.thxReceived")
                                         .replace("{0}", sender.getName())
                                         .replace("{1}", new DecimalFormat("0.##").format(transaction.getAmount())));
                             } catch (OncePerDayException e) {
                                 KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("error.oncePerDay")
-                                        .replace("{0}", args[0]));
+                                        .replace("{0}", receiver.getName()));
                             } catch (InsaneKarmaAmountException e) {
                                 KarmaPlugin.getInstance().getLogger().warning("Insane karma amount: " + e.getTransaction());
                                 KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("error.insaneKarmaAmount")
-                                        .replace("{0}", args[0])
+                                        .replace("{0}", receiver.getName())
                                         .replace("{1}", String.valueOf(e.getTransaction().getAmount()))
                                 );
                             }
