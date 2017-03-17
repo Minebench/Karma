@@ -42,7 +42,7 @@ public class SetCommand implements SubCommand {
     @Override
     public void execute(CommandSender sender, String[] args) {
         ProxiedPlayer player = (ProxiedPlayer) sender;
-        if (player.hasPermission("Karma.mod")) {
+        if (player.hasPermission("karma.command.particles.set")) {
             if (args.length > 1) {
                 UUID targetUUID = KarmaPlugin.getInstance().getUUIDByName(args[0]);
                 if (targetUUID != null) {
@@ -79,7 +79,7 @@ public class SetCommand implements SubCommand {
     @Override
     public List<String> getTabCompletions(CommandSender sender, String[] args) {
         List<String> suggestions = new ArrayList<>();
-        if (sender.hasPermission("Karma.mod")) {
+        if (sender.hasPermission("karma.command.particles.set")) {
             if (args.length == 2) {
                 for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
                     suggestions.add(player.getName());

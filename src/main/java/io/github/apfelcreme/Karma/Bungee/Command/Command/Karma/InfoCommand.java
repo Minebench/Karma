@@ -42,9 +42,9 @@ public class InfoCommand implements SubCommand {
     @Override
     public void execute(CommandSender sender, String[] args) {
         ProxiedPlayer player = (ProxiedPlayer) sender;
-        if (player.hasPermission("Karma.user")) {
+        if (player.hasPermission("karma.command.karma.info")) {
             UUID targetUUID = player.getUniqueId();
-            if (player.hasPermission("Karma.mod") && args.length > 0) {
+            if (player.hasPermission("karma.command.karma.info.others") && args.length > 0) {
                 targetUUID = KarmaPlugin.getInstance().getUUIDByName(args[0]);
             }
             if (targetUUID != null) {
@@ -70,9 +70,19 @@ public class InfoCommand implements SubCommand {
     @Override
     public List<String> getTabCompletions(CommandSender sender, String[] args) {
         List<String> suggestions = new ArrayList<>();
-        if (sender.hasPermission("Karma.mod")) {
-            for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
-                suggestions.add(player.getName());
+        if (sender.hasPermission("karma.command.karma.info.others")) {
+            if (args.length == 2) {
+                for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
+                    if (!player.equals(sender)) {
+                        suggestions.add(player.getName());
+                    }
+                }
+            } else if (args.length == 3) {
+                for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
+                    if (!player.equals(sender) && player.getName().toLowerCase().startsWith(args[1].toLowerCase())) {
+                        suggestions.add(player.getName());
+                    }
+                }
             }
         }
         return suggestions;

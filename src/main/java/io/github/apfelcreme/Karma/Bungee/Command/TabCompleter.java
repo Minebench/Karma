@@ -65,6 +65,18 @@ public class TabCompleter implements Listener {
                 SubCommand subCommand = plugin.getKarmaCommand().getSubCommand(args[1]);
                 if (subCommand != null) {
                     event.getSuggestions().addAll(subCommand.getTabCompletions(sender, args));
+                } else {
+                    for (String subCommandName : plugin.getKarmaCommand().getSubCommands().keySet()) {
+                        if (subCommandName.startsWith(args[1].toLowerCase()) && sender.hasPermission("karma.command.karma." + subCommandName)) {
+                            event.getSuggestions().add(subCommandName);
+                        }
+                    }
+                }
+            } else {
+                for (String subCommandName : plugin.getKarmaCommand().getSubCommands().keySet()) {
+                    if (sender.hasPermission("karma.command.karma." + subCommandName)) {
+                        event.getSuggestions().add(subCommandName);
+                    }
                 }
             }
         } else if (KarmaPluginConfig.getInstance().useParticles()
@@ -73,6 +85,19 @@ public class TabCompleter implements Listener {
                 SubCommand subCommand = plugin.getParticlesCommand().getSubCommand(args[1]);
                 if (subCommand != null) {
                     event.getSuggestions().addAll(subCommand.getTabCompletions(sender, args));
+                } else {
+                    for (String subCommandName : plugin.getParticlesCommand().getSubCommands().keySet()) {
+                        if (subCommandName.startsWith(args[1].toLowerCase()) && sender.hasPermission("karma.command.particles." + subCommandName)) {
+                            event.getSuggestions().add(subCommandName);
+                        }
+                    }
+                }
+
+            } else {
+                for (String subCommandName : plugin.getParticlesCommand().getSubCommands().keySet()) {
+                    if (sender.hasPermission("karma.command.particles." + subCommandName)) {
+                        event.getSuggestions().add(subCommandName);
+                    }
                 }
             }
         } else if (KarmaPlugin.getCommandAliases(plugin.getThxCommand()).contains(args[0].replace("/", ""))) {

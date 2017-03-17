@@ -43,7 +43,7 @@ public class GiveCommand implements SubCommand {
     @Override
     public void execute(CommandSender sender, String[] args) {
         ProxiedPlayer player = (ProxiedPlayer) sender;
-        if (player.hasPermission("Karma.user")) {
+        if (player.hasPermission("karma.command.karma.give")) {
             if (args.length > 0) {
                 UUID uuid = KarmaPlugin.getInstance().getUUIDByName(args[0]);
                 if (uuid != null) {
@@ -90,7 +90,7 @@ public class GiveCommand implements SubCommand {
             }
         } else if (args.length == 3) {
             for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
-                if (!player.equals(sender) && player.getName().startsWith(args[1])) {
+                if (!player.equals(sender) && player.getName().toLowerCase().startsWith(args[1].toLowerCase())) {
                     suggestions.add(player.getName());
                 }
             }

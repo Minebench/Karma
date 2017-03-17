@@ -40,7 +40,7 @@ public class ConfirmCommand implements SubCommand {
     @Override
     public void execute(CommandSender sender, String[] args) {
         ProxiedPlayer player = (ProxiedPlayer) sender;
-        if (player.hasPermission("Karma.user")) {
+        if (player.hasPermission("karma.command.karma.karma.confirm")) {
             Request request = RequestManager.getInstance().getRequest(player);
             if (request != null) {
                 request.execute();

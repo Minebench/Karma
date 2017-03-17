@@ -40,7 +40,7 @@ public class TopCommand implements SubCommand {
     @Override
     public void execute(CommandSender sender, String[] args) {
         ProxiedPlayer player = (ProxiedPlayer) sender;
-        if (player.hasPermission("Karma.user")) {
+        if (player.hasPermission("karma.command.karma.karma.top")) {
             List<PlayerData> topList = KarmaPlugin.getInstance().getDatabaseController()
                     .getTopList(KarmaPluginConfig.getInstance().getConfiguration().getInt("topListSize"));
             KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("info.karma.top.header")

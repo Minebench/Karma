@@ -40,7 +40,7 @@ public class ResetCommand implements SubCommand {
     @Override
     public void execute(CommandSender sender, String[] args) {
         ProxiedPlayer player = (ProxiedPlayer) sender;
-        if (player.hasPermission("Karma.mod")) {
+        if (player.hasPermission("karma.command.karma.reset")) {
             if (args.length > 0) {
                 UUID targetUUID = KarmaPlugin.getInstance().getUUIDByName(args[0]);
                 if (targetUUID != null) {
@@ -60,14 +60,14 @@ public class ResetCommand implements SubCommand {
     @Override
     public List<String> getTabCompletions(CommandSender sender, String[] args) {
         List<String> suggestions = new ArrayList<>();
-        if (sender.hasPermission("Karma.mod")) {
+        if (sender.hasPermission("karma.command.karma.reset")) {
             if (args.length == 2) {
                 for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
                         suggestions.add(player.getName());
                 }
             } else if (args.length == 3) {
                 for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
-                    if (player.getName().startsWith(args[1])) {
+                    if (player.getName().toLowerCase().startsWith(args[1].toLowerCase())) {
                         suggestions.add(player.getName());
                     }
                 }

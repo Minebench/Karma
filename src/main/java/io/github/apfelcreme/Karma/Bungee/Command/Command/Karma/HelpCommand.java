@@ -47,10 +47,12 @@ public class HelpCommand implements SubCommand {
         List<String> strings = new ArrayList<>();
 
         for (String key : configurationSection.getSection("user").getKeys()) {
-            keys.add("info.karma.help.commands.user." + key);
+            if (sender.hasPermission("karma.command.karma." + key)) {
+                keys.add("info.karma.help.commands.user." + key);
+            }
         }
 
-        if (sender.hasPermission("Karma.mod")) {
+        if (sender.hasPermission("karma.command.karma.help.mod")) {
             for (String key : configurationSection.getSection("mod").getKeys()) {
                 keys.add("info.karma.help.commands.mod." + key);
             }

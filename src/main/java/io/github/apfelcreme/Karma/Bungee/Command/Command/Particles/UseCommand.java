@@ -43,7 +43,7 @@ public class UseCommand implements SubCommand {
     @Override
     public void execute(CommandSender sender, String[] args) {
         ProxiedPlayer player = (ProxiedPlayer) sender;
-        if (player.hasPermission("Karma.user")) {
+        if (player.hasPermission("karma.command.particles.use")) {
             if (args.length > 0) {
                 Effect effect = Effect.getEffect(args[0]);
                 if (effect != null && KarmaPluginConfig.getInstance().getParticles().values().contains(effect)) {
@@ -83,8 +83,10 @@ public class UseCommand implements SubCommand {
     @Override
     public List<String> getTabCompletions(CommandSender sender, String[] args) {
         List<String> suggestions = new ArrayList<>();
-        for (Effect effect : KarmaPluginConfig.getInstance().getParticles().values()) {
-            suggestions.add(effect.getDisplayName());
+        if (sender.hasPermission("karma.command.particles.use")) {
+            for (Effect effect : KarmaPluginConfig.getInstance().getParticles().values()) {
+                suggestions.add(effect.getDisplayName());
+            }
         }
         return suggestions;
     }

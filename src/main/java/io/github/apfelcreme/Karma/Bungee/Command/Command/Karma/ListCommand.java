@@ -6,6 +6,7 @@ import io.github.apfelcreme.Karma.Bungee.KarmaPluginConfig;
 import io.github.apfelcreme.Karma.Bungee.User.PlayerData;
 import io.github.apfelcreme.Karma.Bungee.User.Relation;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.text.DecimalFormat;
@@ -40,9 +41,9 @@ public class ListCommand implements SubCommand {
     @Override
     public void execute(CommandSender sender, String[] args) {
         ProxiedPlayer player = (ProxiedPlayer) sender;
-        if (player.hasPermission("Karma.user")) {
+        if (player.hasPermission("karma.command.karma.list")) {
             UUID targetUUID = player.getUniqueId();
-            if (player.hasPermission("Karma.mod") && args.length > 0) {
+            if (player.hasPermission("karma.command.karma.list.others") && args.length > 0) {
                 targetUUID = KarmaPlugin.getInstance().getUUIDByName(args[0]);
             }
             if (targetUUID != null) {
@@ -99,8 +100,25 @@ public class ListCommand implements SubCommand {
         }
     }
 
+
     @Override
     public List<String> getTabCompletions(CommandSender sender, String[] args) {
-        return new ArrayList<>();
+        List<String> suggestions = new ArrayList<>();
+        if (sender.hasPermission("karma.command.karma.list.others")) {
+            if (args.length == 2) {
+                for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
+                    if (!player.equals(sender)) {
+                        suggestions.add(player.getName());
+                    }
+                }
+            } else if (args.length == 3) {
+                for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
+                    if (!player.equals(sender) && player.getName().toLowerCase().startsWith(args[1].toLowerCase())) {
+                        suggestions.add(player.getName());
+                    }
+                }
+            }
+        }
+        return suggestions;
     }
 }

@@ -8,6 +8,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -80,5 +81,9 @@ public class SubCommandExecutor extends Command {
         } else {
             ProxyServer.getInstance().getLogger().info("Command cannot be used from console!");
         }
+    }
+
+    public Map<String, SubCommand> getSubCommands() {
+        return subCommands;
     }
 }

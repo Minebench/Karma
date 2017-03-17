@@ -41,7 +41,7 @@ public class ListCommand implements SubCommand {
     @Override
     public void execute(CommandSender sender, String[] args) {
         ProxiedPlayer player = (ProxiedPlayer) sender;
-        if (player.hasPermission("Karma.user")) {
+        if (player.hasPermission("karma.command.particles.list")) {
             PlayerData playerData = KarmaPlugin.getInstance().getDatabaseController().getPlayerData(player.getUniqueId());
             Double karma = 0.0;
             if (playerData != null) {
