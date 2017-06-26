@@ -74,7 +74,7 @@
                         </relocation>
                         <relocation>
                             <pattern>org.json.simple</pattern>
-                            <shadedPattern>io.github.apfelcreme.Karma.lib.json-simple</shadedPattern>
+                            <shadedPattern>io.github.apfelcreme.Karma.lib.jsonsimple</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
