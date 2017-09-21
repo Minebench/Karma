@@ -54,19 +54,16 @@ public class Relation implements Comparable<Relation> {
             return 1;
         }
 
-        // decline = (0.4*e)^(-x * (1 - thx per week))
         int regenerationDays = KarmaPluginConfig.getInstance().getConfiguration().getInt("karmaRegenerationDays");
-        double perWeek;
         if (regenerationDays > 0) {
-            perWeek = (new Date().getTime() - getFirstTransactionDate().getTime()) /
-                    (MILLISECONDS_PER_DAY * regenerationDays * transactionsDoneTo.size());
-            perWeek = perWeek > 0 ? perWeek : 0;
+            // decline/regeneration = (0.4*e)^(-regenerate * (regenerate - days since last transaction))
+            double daysSinceLastTransaction = (System.currentTimeMillis() - getLastTransactionTime()) / MILLISECONDS_PER_DAY;
+            double ratio = Math.pow(0.4 * Math.E, -regenerationDays * (regenerationDays - daysSinceLastTransaction));
+            return ratio > 1 ? 1 : ratio;
         } else {
-            perWeek = 0;
+            // ratio = (0.4*e)^(-amount of transactions)
+            return Math.pow(0.4 * Math.E, -1 * transactionsDoneTo.size());
         }
-        double ratio = Math.pow(0.4 * Math.E, -1 * transactionsDoneTo.size() / perWeek);
-
-        return ratio > 1 ? 1 : ratio;
     }
 
     /**
@@ -127,14 +124,14 @@ public class Relation implements Comparable<Relation> {
      *
      * @return the date of the first transaction done by the relation sender;
      */
-    public Date getFirstTransactionDate() {
-        Date date = new Date();
+    public long getFirstTransactionTime() {
+        long time = System.currentTimeMillis();
         for (Transaction transaction : transactionsDoneTo) {
-            if (transaction.getDate().getTime() < date.getTime()) {
-                date = transaction.getDate();
+            if (transaction.getTime() < time) {
+                time = transaction.getTime();
             }
         }
-        return date;
+        return time;
     }
 
     /**
@@ -142,14 +139,14 @@ public class Relation implements Comparable<Relation> {
      *
      * @return the date of the last transaction done by the relation sender;
      */
-    public Date getLastTransactionDate() {
-        Date date = new Date(0);
+    public long getLastTransactionTime() {
+        long time =0;
         for (Transaction transaction : transactionsDoneTo) {
-            if (transaction.getDate().getTime() > date.getTime()) {
-                date = transaction.getDate();
+            if (transaction.getTime() > time) {
+                time = transaction.getTime();
             }
         }
-        return date;
+        return time;
     }
 
     @Override

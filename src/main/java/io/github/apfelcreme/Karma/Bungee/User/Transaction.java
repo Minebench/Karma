@@ -5,8 +5,6 @@ import io.github.apfelcreme.Karma.Bungee.Exception.OncePerDayException;
 import io.github.apfelcreme.Karma.Bungee.KarmaPlugin;
 import io.github.apfelcreme.Karma.Bungee.KarmaPluginConfig;
 import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -36,20 +34,20 @@ public class Transaction {
     private UUID sender;
     private UUID receiver;
     private double amount;
-    private Date date;
+    private long time;
 
-    public Transaction(int id, UUID sender, UUID receiver, double amount, Date date) {
+    public Transaction(int id, UUID sender, UUID receiver, double amount, long time) {
         this.id = id;
         this.sender = sender;
         this.receiver = receiver;
         this.amount = amount;
-        this.date = date;
+        this.time = time;
     }
 
     public Transaction(UUID sender, UUID receiver) {
         this.sender = sender;
         this.receiver = receiver;
-        this.date = new Date();
+        this.time = System.currentTimeMillis();
     }
 
     /**
@@ -71,7 +69,7 @@ public class Transaction {
 
         if ((senderData.getRelation(receiver) != null)
                 && !commandSender.hasPermission("karma.command.give.bypasscooldown")
-                && new Date().getTime() < (senderData.getRelation(receiver).getLastTransactionDate().getTime() + KarmaPluginConfig.getInstance().getConfiguration().getInt("thxCooldown") * 60 * 1000)) {
+                && System.currentTimeMillis() < (senderData.getRelation(receiver).getLastTransactionTime() + KarmaPluginConfig.getInstance().getConfiguration().getInt("thxCooldown") * 60 * 1000)) {
             throw new OncePerDayException(senderData.getRelation(receiver));
         }
         amount = KarmaPluginConfig.getInstance().getConfiguration().getDouble("karmaPerThx") * senderData.getRelation(receiver).getRatio();
@@ -143,12 +141,12 @@ public class Transaction {
     }
 
     /**
-     * returns the date of the transaction
+     * returns the time of the transaction
      *
-     * @return the date of the transaction
+     * @return the time of the transaction
      */
-    public Date getDate() {
-        return date;
+    public long getTime() {
+        return time;
     }
 
     @Override

@@ -63,7 +63,7 @@ public class MySQLController implements DatabaseController {
                                 UUID.fromString(resultSet.getString("senderUUID")),
                                 UUID.fromString(resultSet.getString("receiverUUID")),
                                 resultSet.getDouble("amount"),
-                                new Date(resultSet.getLong("time_stamp")));
+                                resultSet.getLong("time_stamp"));
                         if (transaction.getSender().equals(uuid)) {
                             doneTransactions.add(transaction);
                         } else {
@@ -125,7 +125,7 @@ public class MySQLController implements DatabaseController {
                         Statement.RETURN_GENERATED_KEYS);
                 statement.setString(1, transaction.getSender().toString());
                 statement.setString(2, transaction.getReceiver().toString());
-                statement.setLong(3, transaction.getDate().getTime());
+                statement.setLong(3, transaction.getTime());
                 statement.setDouble(4, transaction.getAmount());
                 statement.executeUpdate();
                 ResultSet resultSet = statement.getGeneratedKeys();
