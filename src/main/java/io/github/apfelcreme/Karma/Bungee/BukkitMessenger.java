@@ -39,11 +39,10 @@ public class BukkitMessenger {
         ServerInfo target = player.getServer().getInfo();
         if ((target != null) && (effect != null)) {
             ByteArrayDataOutput out = ByteStreams.newDataOutput();
-            out.writeUTF("applyParticles");
             out.writeUTF(player.getUniqueId().toString());
             out.writeUTF(effect.name());
             out.writeLong(effect.getDelay());
-            target.sendData("Karma", out.toByteArray());
+            target.sendData("karma:applyParticles", out.toByteArray());
         }
     }
 }

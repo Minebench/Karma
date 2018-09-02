@@ -124,7 +124,7 @@ public class KarmaPlugin extends Plugin {
             getProxy().getPluginManager().registerListener(this, new VanishStatusChangeListener(this));
         }
         // register the messaging channel
-        getProxy().registerChannel("Karma");
+        getProxy().registerChannel("karma:applyParticles");
 
     }
 

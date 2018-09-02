@@ -40,21 +40,18 @@ public class BungeeMessageListener implements PluginMessageListener {
 
     @Override
     public void onPluginMessageReceived(String s, Player player, byte[] bytes) {
-        if (!s.equals("Karma")) {
+        if (!s.equals("karma:applyParticles")) {
             return;
         }
 
         ByteArrayDataInput in = ByteStreams.newDataInput(bytes);
-        String subChannel = in.readUTF();
-        if (subChannel.equals("applyParticles")) {
-            Player p = plugin.getServer().getPlayer(UUID.fromString(in.readUTF()));
-            Effect effect = getEffect(in.readUTF());
-            long delay = in.readLong();
-            if (p != null) {
-                ParticleTask.getInstance().removeCloud(p);
-                if (effect != null) {
-                    ParticleTask.getInstance().addCloud(p, new ParticleCloud(p.getUniqueId(), effect, delay));
-                }
+        Player p = plugin.getServer().getPlayer(UUID.fromString(in.readUTF()));
+        Effect effect = getEffect(in.readUTF());
+        long delay = in.readLong();
+        if (p != null) {
+            ParticleTask.getInstance().removeCloud(p);
+            if (effect != null) {
+                ParticleTask.getInstance().addCloud(p, new ParticleCloud(p.getUniqueId(), effect, delay));
             }
         }
     }
