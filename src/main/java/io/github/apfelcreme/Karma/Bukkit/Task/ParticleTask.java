@@ -2,9 +2,9 @@ package io.github.apfelcreme.Karma.Bukkit.Task;
 
 import io.github.apfelcreme.Karma.Bukkit.KarmaPlugin;
 import io.github.apfelcreme.Karma.Bukkit.ParticleCloud;
-import org.bukkit.Effect;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,7 +32,7 @@ public class ParticleTask {
     /**
      * the task id of the repeating task
      */
-    private int taskId;
+    private BukkitTask task;
 
     /**
      * the scheduler instance
@@ -42,7 +42,7 @@ public class ParticleTask {
     /**
      * a map of players with their particle clouds
      */
-    private Map<Player, ParticleCloud> playerEffectMap = null;
+    private Map<Player, ParticleCloud> playerEffectMap = new HashMap<>();
 
     /**
      * the number of runs the task has done
@@ -50,9 +50,8 @@ public class ParticleTask {
     private int runs;
 
     private ParticleTask() {
-        taskId = -1;
+        task = null;
         runs = 0;
-        playerEffectMap = new HashMap<>();
     }
 
     /**
@@ -74,7 +73,7 @@ public class ParticleTask {
         if (isActive()) {
             kill();
         }
-        taskId = KarmaPlugin.getInstance().getServer().getScheduler().scheduleSyncRepeatingTask(KarmaPlugin.getInstance(), new Runnable() {
+        task = new BukkitRunnable() {
             @Override
             public void run() {
                 for (Map.Entry<Player, ParticleCloud> entry : playerEffectMap.entrySet()) {
@@ -86,15 +85,15 @@ public class ParticleTask {
                     runs++;
                 }
             }
-        }, 20L, 1L);
+        }.runTaskTimer(KarmaPlugin.getInstance(), 20L, 1L);
     }
 
     /**
      * kills the task
      */
     private void kill() {
-        KarmaPlugin.getInstance().getServer().getScheduler().cancelTask(taskId);
-        taskId = -1;
+        task.cancel();
+        task = null;
         runs = 0;
         playerEffectMap.clear();
     }
@@ -130,7 +129,7 @@ public class ParticleTask {
      * @return true or false
      */
     public boolean isActive() {
-        return taskId != -1;
+        return task != null && task.getTaskId() != -1;
     }
 
 }
