@@ -92,7 +92,9 @@ public class ParticleTask {
      * kills the task
      */
     private void kill() {
-        task.cancel();
+        if (task != null) {
+            task.cancel();
+        }
         task = null;
         runs = 0;
         playerEffectMap.clear();
