@@ -42,7 +42,7 @@ public class BukkitMessenger {
             out.writeUTF(player.getUniqueId().toString());
             out.writeUTF(effect.name());
             out.writeLong(effect.getDelay());
-            target.sendData("karma:applyParticles", out.toByteArray());
+            target.sendData("karma:applyparticles", out.toByteArray());
         }
     }
 }
