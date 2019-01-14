@@ -40,7 +40,7 @@ public class BungeeMessageListener implements PluginMessageListener {
 
     @Override
     public void onPluginMessageReceived(String s, Player player, byte[] bytes) {
-        if (!s.equals("karma:applyParticles")) {
+        if (!s.equals("karma:applyparticles")) {
             return;
         }
 

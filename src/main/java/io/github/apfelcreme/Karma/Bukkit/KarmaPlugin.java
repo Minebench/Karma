@@ -30,7 +30,7 @@ public class KarmaPlugin extends JavaPlugin {
         instance = this;
 
         // register the Plugin channels for the bungee communication
-        getServer().getMessenger().registerIncomingPluginChannel(this, "karma:applyParticles",
+        getServer().getMessenger().registerIncomingPluginChannel(this, "karma:applyparticles",
                 new BungeeMessageListener(this));
 
         // register a listener
