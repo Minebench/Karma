@@ -4,10 +4,12 @@ import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
 import io.github.apfelcreme.Karma.Bukkit.Task.ParticleTask;
 import org.bukkit.Effect;
+import org.bukkit.Particle;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 
 import java.util.UUID;
+import java.util.logging.Level;
 
 /**
  * Copyright (C) 2016 Lord36 aka Apfelcreme
@@ -46,28 +48,25 @@ public class BungeeMessageListener implements PluginMessageListener {
 
         ByteArrayDataInput in = ByteStreams.newDataInput(bytes);
         Player p = plugin.getServer().getPlayer(UUID.fromString(in.readUTF()));
-        Effect effect = getEffect(in.readUTF());
+        String particleStr = in.readUTF();
+        Particle particle = null;
+        Effect effect = null;
+        try {
+            particle = Particle.valueOf(particleStr.toUpperCase());
+        } catch (IllegalArgumentException e1) {
+            try {
+                effect = Effect.valueOf(particleStr.toUpperCase());
+            } catch (IllegalArgumentException e2) {
+                plugin.getLogger().log(Level.WARNING, particleStr + " is neither a Particle nor an Effect?");
+                return;
+            }
+        }
         long delay = in.readLong();
         if (p != null) {
             ParticleTask.getInstance().removeCloud(p);
             if (effect != null) {
-                ParticleTask.getInstance().addCloud(p, new ParticleCloud(p.getUniqueId(), effect, delay));
+                ParticleTask.getInstance().addCloud(p, new ParticleCloud(p.getUniqueId(), particle, effect, delay));
             }
         }
-    }
-
-    /**
-     * returns a matching effect without throwing any exceptions
-     *
-     * @param effectName the effect name
-     * @return the effect with that name
-     */
-    public Effect getEffect(String effectName) {
-        for (Effect effect : Effect.values()) {
-            if (effect.name().equalsIgnoreCase(effectName)) {
-                return effect;
-            }
-        }
-        return null;
     }
 }

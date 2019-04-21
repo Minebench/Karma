@@ -18,37 +18,37 @@ sql:
 effects:
   CLOUD:
     delay: 5
-  COLOURED_DUST:
+  REDSTONE:
     delay: 3
   CRIT:
     delay: 10
   ENDER_SIGNAL:
     delay: 10
-  EXPLOSION:
+  EXPLOSION_NORMAL:
     delay: 10
   EXPLOSION_HUGE:
     delay: 20
   EXPLOSION_LARGE:
     delay: 15
-  FLYING_GLYPH:
+  ENCHANTMENT_TABLE:
     delay: 5
   FIREWORKS_SPARK:
     delay: 10
   FLAME:
     delay: 3
-  HAPPY_VILLAGER:
+  VILLAGER_HAPPY:
     delay: 5
   HEART:
     delay: 5
-  INSTANT_SPELL:
+  SPELL_INSTANT:
     delay: 5
-  LARGE_SMOKE:
+  SMOKE_LARGE:
     delay: 8
-  LAVADRIP:
+  DRIP_LAVA:
     delay: 5
-  LAVA_POP:
+  LAVA:
     delay: 4
-  MAGIC_CRIT:
+  CRIT_MAGIC:
     delay: 2
   MOBSPAWNER_FLAMES:
     delay: 10
@@ -56,53 +56,51 @@ effects:
     delay: 0
   NOTE:
     delay: 5
-  PARTICLE_SMOKE:
+  SMOKE_NORMAL:
     delay: 5
   PORTAL:
     delay: 2
   POTION_BREAK:
     delay: 10
-  POTION_SWIRL:
+  SPELL_MOB:
     delay: 10
-  POTION_SWIRL_TRANSPARENT:
+  SPELL_MOB_AMBIENT:
     delay: 10
   SLIME:
     delay: 5
-  SMALL_SMOKE:
-    delay: 5
   SMOKE:
     delay: 10
-  SNOWBALL_BREAK:
+  SNOWBALL:
     delay: 4
   SNOW_SHOVEL:
     delay: 5
   SPELL:
     delay: 5
-  SPLASH:
+  WATER_SPLASH:
     delay: 5
-  VILLAGER_THUNDERCLOUD:
+  VILLAGER_ANGRY:
     delay: 5
-  VOID_FOG:
-    delay: 1
-  WATERDRIP:
+  WATER_DROP:
     delay: 5
-  WITCH_MAGIC:
+  WATER_BUBBLE:
+    delay: 5
+  SPELL_WITCH:
     delay: 5
 levels:
-  0: NONE
+  0: WATER_BUBBLE
   5: VOID_FOG
-  25: WATERDRIP
+  25: WATER_DROP
   50: HEART
   75: NOTE
-  100: LAVADRIP
+  100: DRIP_LAVA
   125: FLAME
   150: FIREWORKS_SPARK
   175: PORTAL
   200: MOBSPAWNER_FLAMES
-  225: COLOURED_DUST
-  250: LAVA_POP
-  275: PARTICLE_SMOKE
+  225: REDSTONE
+  250: LAVA
+  275: SMOKE
   300: CLOUD
-  400: FLYING_GLYPH
-  500: WITCH_MAGIC
-  600: POTION_SWIRL
+  400: ENCHANTMENT_TABLE
+  500: SPELL_WITCH
+  600: SPELL_MOB

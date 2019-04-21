@@ -1,4 +1,5 @@
 name: KarmaBukkit
 version: '${minecraft.plugin.version}'
+api-version: 1.13
 main: io.github.apfelcreme.Karma.Bukkit.KarmaPlugin
 author: Lord36

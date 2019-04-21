@@ -1,8 +1,11 @@
 package io.github.apfelcreme.Karma.Bukkit;
 
+import org.bukkit.Color;
 import org.bukkit.Effect;
 import org.bukkit.Location;
+import org.bukkit.Particle;
 
+import java.util.Random;
 import java.util.UUID;
 
 /**
@@ -25,11 +28,30 @@ import java.util.UUID;
  */
 public class ParticleCloud {
 
+    private static final Random RANDOM = new Random();
+    private static final Color[] COLORS = {
+            Color.YELLOW,
+            Color.RED,
+            Color.AQUA,
+            Color.PURPLE,
+            Color.GREEN,
+            Color.FUCHSIA,
+            Color.BLUE,
+            Color.LIME,
+            Color.MAROON,
+            Color.NAVY,
+            Color.OLIVE,
+            Color.ORANGE,
+            Color.RED,
+            Color.TEAL
+    };
+
     private UUID owner;
+    private Particle particle;
     private Effect effect;
     private long delay;
 
-    public ParticleCloud(UUID owner, Effect effect, long delay) {
+    public ParticleCloud(UUID owner, Particle particle, Effect effect, long delay) {
         this.owner = owner;
         this.effect = effect;
         this.delay = delay;
@@ -41,20 +63,25 @@ public class ParticleCloud {
      * @param location the location where the particles are displayed
      */
     public void display(Location location) {
-        int data = 0;
 
-        if (effect.equals(Effect.NOTE)) {
-            data = (int) (Math.random() * 24);
+        if (particle != null) {
+            Object data = null;
+            double extra = 0;
+            if (particle == Particle.NOTE) {
+                extra = (int) (Math.random() * 24);
+            }
+            if (particle == Particle.REDSTONE) {
+                data = new Particle.DustOptions(COLORS[RANDOM.nextInt(COLORS.length)], 1);
+            }
+            if (particle == Particle.PORTAL) {
+                // makes them move instead of just falling down
+                extra = 1;
+            }
+            location.getWorld().spawnParticle(particle, location, 20, 0.5f, 1.5f, 0.5f, extra, data);
         }
-        if (effect.equals(Effect.COLOURED_DUST)) {
-            data = (int) (Math.random() * 15);
+        if (effect != null) {
+            location.getWorld().playEffect(location, effect, 0, 0);
         }
-        if (effect.equals(Effect.PORTAL)) {
-            // makes them move instead of just falling down
-            data = 1;
-        }
-        location.getWorld().spigot().playEffect(location, effect, 0, 0,
-                0.5f, 1.5f, 0.5f, data, 1, 20);
     }
 
     /**
@@ -88,6 +115,7 @@ public class ParticleCloud {
     public String toString() {
         return "ParticleCloud{" +
                 "owner=" + owner +
+                ", particle=" + particle +
                 ", effect=" + effect +
                 ", delay=" + delay +
                 '}';
