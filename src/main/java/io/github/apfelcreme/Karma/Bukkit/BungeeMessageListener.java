@@ -51,14 +51,16 @@ public class BungeeMessageListener implements PluginMessageListener {
         String particleStr = in.readUTF();
         Particle particle = null;
         Effect effect = null;
-        try {
-            particle = Particle.valueOf(particleStr.toUpperCase());
-        } catch (IllegalArgumentException e1) {
+        if (!particleStr.equalsIgnoreCase("none")) {
             try {
-                effect = Effect.valueOf(particleStr.toUpperCase());
-            } catch (IllegalArgumentException e2) {
-                plugin.getLogger().log(Level.WARNING, particleStr + " is neither a Particle nor an Effect?");
-                return;
+                particle = Particle.valueOf(particleStr.toUpperCase());
+            } catch (IllegalArgumentException e1) {
+                try {
+                    effect = Effect.valueOf(particleStr.toUpperCase());
+                } catch (IllegalArgumentException e2) {
+                    plugin.getLogger().log(Level.WARNING, particleStr + " is neither a Particle nor an Effect?");
+                    return;
+                }
             }
         }
         long delay = in.readLong();
