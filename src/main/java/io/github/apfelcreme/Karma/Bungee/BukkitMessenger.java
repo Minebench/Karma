@@ -37,10 +37,10 @@ public class BukkitMessenger {
      */
     public static void applyParticles(ProxiedPlayer player, Effect effect) {
         ServerInfo target = player.getServer().getInfo();
-        if ((target != null) && (effect != null)) {
+        if (target != null) {
             ByteArrayDataOutput out = ByteStreams.newDataOutput();
             out.writeUTF(player.getUniqueId().toString());
-            out.writeUTF(effect.getName());
+            out.writeUTF(effect != null ? effect.getName() : "NONE");
             out.writeLong(effect.getDelay());
             target.sendData("karma:applyparticles", out.toByteArray());
         }

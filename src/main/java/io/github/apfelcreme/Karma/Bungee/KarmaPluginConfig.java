@@ -261,6 +261,9 @@ public class KarmaPluginConfig {
      * @return an effect enum
      */
     public Effect getEffect(String effectName) {
+        if (effectName == null) {
+            return null;
+        }
         return effectsByName.get(effectName.toLowerCase());
     }
 
