@@ -68,63 +68,39 @@ public class MySQLConnector {
      *
      * @return a connection from a HikariCP connection pool
      */
-    public Connection getConnection() {
-        try {
-            return dataSource.getConnection();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    /**
-     * closes a connection
-     *
-     * @param connection a connection
-     */
-    public void closeConnection(Connection connection) {
-        try {
-            if (connection != null) {
-                connection.close();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    public Connection getConnection() throws SQLException {
+        return dataSource.getConnection();
     }
 
     /**
      * creates the tables if they dont exist yet
      */
     public void initTables() {
-        Connection connection = getConnection();
-        try {
-            if (connection != null) {
-                PreparedStatement statement = connection.prepareStatement(
-                        "CREATE DATABASE IF NOT EXISTS " + KarmaPluginConfig.getInstance().getSqlDatabase());
-                statement.executeUpdate();
+        try (Connection connection = getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(
+                    "CREATE DATABASE IF NOT EXISTS " + KarmaPluginConfig.getInstance().getSqlDatabase());
+            statement.executeUpdate();
 
-                statement = connection.prepareStatement(
-                        "CREATE TABLE IF NOT EXISTS " + KarmaPluginConfig.getInstance().getPlayerTable() + "("
-                                + "player_id BIGINT AUTO_INCREMENT not null, "
-                                + "uuid VARCHAR(50) UNIQUE NOT NULL, "
-                                + "effects_enabled BOOLEAN, "
-                                + "effect VARCHAR(50), "
-                                + "PRIMARY KEY (player_id));");
-                statement.executeUpdate();
+            statement = connection.prepareStatement(
+                    "CREATE TABLE IF NOT EXISTS " + KarmaPluginConfig.getInstance().getPlayerTable() + "("
+                            + "player_id BIGINT AUTO_INCREMENT not null, "
+                            + "uuid VARCHAR(50) UNIQUE NOT NULL, "
+                            + "effects_enabled BOOLEAN, "
+                            + "effect VARCHAR(50), "
+                            + "PRIMARY KEY (player_id));");
+            statement.executeUpdate();
 
-                statement = connection.prepareStatement(
-                        "CREATE TABLE IF NOT EXISTS " + KarmaPluginConfig.getInstance().getTransactionsTable() + "("
-                                + "transaction_id BIGINT AUTO_INCREMENT NOT NULL, "
-                                + "sender_id BIGINT, "
-                                + "receiver_id BIGINT, "
-                                + "time_stamp BIGINT, "
-                                + "amount DOUBLE,"
-                                + "FOREIGN KEY (sender_id) REFERENCES " + KarmaPluginConfig.getInstance().getPlayerTable() + "(player_id),"
-                                + "FOREIGN KEY (receiver_id) REFERENCES " + KarmaPluginConfig.getInstance().getPlayerTable() + "(player_id),"
-                                + "PRIMARY KEY (transaction_id));");
-                statement.executeUpdate();
-                closeConnection(connection);
-            }
+            statement = connection.prepareStatement(
+                    "CREATE TABLE IF NOT EXISTS " + KarmaPluginConfig.getInstance().getTransactionsTable() + "("
+                            + "transaction_id BIGINT AUTO_INCREMENT NOT NULL, "
+                            + "sender_id BIGINT, "
+                            + "receiver_id BIGINT, "
+                            + "time_stamp BIGINT, "
+                            + "amount DOUBLE,"
+                            + "FOREIGN KEY (sender_id) REFERENCES " + KarmaPluginConfig.getInstance().getPlayerTable() + "(player_id),"
+                            + "FOREIGN KEY (receiver_id) REFERENCES " + KarmaPluginConfig.getInstance().getPlayerTable() + "(player_id),"
+                            + "PRIMARY KEY (transaction_id));");
+            statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }

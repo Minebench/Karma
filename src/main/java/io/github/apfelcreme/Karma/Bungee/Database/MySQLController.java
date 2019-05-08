@@ -41,61 +41,56 @@ public class MySQLController implements DatabaseController {
         if (KarmaPlugin.getInstance().getPlayerDataCache().containsKey(uuid)) {
             return KarmaPlugin.getInstance().getPlayerDataCache().get(uuid);
         } else {
-            Connection connection = MySQLConnector.getInstance().getConnection();
-            if (connection != null) {
-                try {
-                    PlayerData playerData;
-                    PreparedStatement statement = connection.prepareStatement(
-                            "SELECT t.transaction_id, s.uuid as senderUUID, r.uuid as receiverUUID, t.time_stamp, t.amount " +
-                                    "FROM " + KarmaPluginConfig.getInstance().getTransactionsTable() + " t " +
-                                    " LEFT JOIN " + KarmaPluginConfig.getInstance().getPlayerTable() + " s on t.sender_id = s.player_id " +
-                                    " LEFT JOIN " + KarmaPluginConfig.getInstance().getPlayerTable() + " r on t.receiver_id = r.player_id " +
-                                    "WHERE s.uuid = ? or r.uuid = ?");
-                    statement.setString(1, uuid.toString());
-                    statement.setString(2, uuid.toString());
-                    ResultSet resultSet = statement.executeQuery();
-                    List<Transaction> doneTransactions = new ArrayList<>();
-                    List<Transaction> receivedTransactions = new ArrayList<>();
-                    while (resultSet.next()) {
-                        Transaction transaction = new Transaction(
-                                resultSet.getInt("transaction_id"),
-                                UUID.fromString(resultSet.getString("senderUUID")),
-                                UUID.fromString(resultSet.getString("receiverUUID")),
-                                resultSet.getDouble("amount"),
-                                resultSet.getLong("time_stamp"));
-                        if (transaction.getSender().equals(uuid)) {
-                            doneTransactions.add(transaction);
-                        } else {
-                            receivedTransactions.add(transaction);
-                        }
-                    }
-
-                    statement = connection.prepareStatement(
-                            "SELECT * FROM " + KarmaPluginConfig.getInstance().getPlayerTable() + " WHERE uuid = ?");
-                    statement.setString(1, uuid.toString());
-                    resultSet = statement.executeQuery();
-                    if (resultSet.first()) {
-                        // player data was found
-                        playerData = new PlayerData(
-                                uuid,
-                                KarmaPluginConfig.getInstance().getEffect(resultSet.getString("effect")),
-                                resultSet.getBoolean("effects_enabled"),
-                                doneTransactions,
-                                receivedTransactions
-                        );
-                        KarmaPlugin.getInstance().getPlayerDataCache().put(uuid, playerData);
-                        return playerData;
+            try (Connection connection = MySQLConnector.getInstance().getConnection()) {
+                PlayerData playerData;
+                PreparedStatement statement = connection.prepareStatement(
+                        "SELECT t.transaction_id, s.uuid as senderUUID, r.uuid as receiverUUID, t.time_stamp, t.amount " +
+                                "FROM " + KarmaPluginConfig.getInstance().getTransactionsTable() + " t " +
+                                " LEFT JOIN " + KarmaPluginConfig.getInstance().getPlayerTable() + " s on t.sender_id = s.player_id " +
+                                " LEFT JOIN " + KarmaPluginConfig.getInstance().getPlayerTable() + " r on t.receiver_id = r.player_id " +
+                                "WHERE s.uuid = ? or r.uuid = ?");
+                statement.setString(1, uuid.toString());
+                statement.setString(2, uuid.toString());
+                ResultSet resultSet = statement.executeQuery();
+                List<Transaction> doneTransactions = new ArrayList<>();
+                List<Transaction> receivedTransactions = new ArrayList<>();
+                while (resultSet.next()) {
+                    Transaction transaction = new Transaction(
+                            resultSet.getInt("transaction_id"),
+                            UUID.fromString(resultSet.getString("senderUUID")),
+                            UUID.fromString(resultSet.getString("receiverUUID")),
+                            resultSet.getDouble("amount"),
+                            resultSet.getLong("time_stamp"));
+                    if (transaction.getSender().equals(uuid)) {
+                        doneTransactions.add(transaction);
                     } else {
-                        // player did not exist -> create
-                        playerData = new PlayerData(uuid, null, true, new ArrayList<Transaction>(), new ArrayList<Transaction>());
-                        playerData.save();
-                        return playerData;
+                        receivedTransactions.add(transaction);
                     }
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                } finally {
-                    MySQLConnector.getInstance().closeConnection(connection);
                 }
+
+                statement = connection.prepareStatement(
+                        "SELECT * FROM " + KarmaPluginConfig.getInstance().getPlayerTable() + " WHERE uuid = ?");
+                statement.setString(1, uuid.toString());
+                resultSet = statement.executeQuery();
+                if (resultSet.first()) {
+                    // player data was found
+                    playerData = new PlayerData(
+                            uuid,
+                            KarmaPluginConfig.getInstance().getEffect(resultSet.getString("effect")),
+                            resultSet.getBoolean("effects_enabled"),
+                            doneTransactions,
+                            receivedTransactions
+                    );
+                    KarmaPlugin.getInstance().getPlayerDataCache().put(uuid, playerData);
+                    return playerData;
+                } else {
+                    // player did not exist -> create
+                    playerData = new PlayerData(uuid, null, true, new ArrayList<Transaction>(), new ArrayList<Transaction>());
+                    playerData.save();
+                    return playerData;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
         return null;
@@ -109,32 +104,27 @@ public class MySQLController implements DatabaseController {
      */
     @Override
     public Integer insertTransaction(Transaction transaction) {
-        Connection connection = MySQLConnector.getInstance().getConnection();
-        if (connection != null) {
-            try {
-                PreparedStatement statement = connection.prepareStatement(
-                        "INSERT INTO " + KarmaPluginConfig.getInstance().getTransactionsTable() +
-                                "(sender_id, receiver_id, time_stamp, amount) " +
-                                "VALUES (" +
-                                " (Select player_id from " + KarmaPluginConfig.getInstance().getPlayerTable() + " where uuid = ?), " +
-                                " (Select player_id from " + KarmaPluginConfig.getInstance().getPlayerTable() + " where uuid = ?), " +
-                                "  ? , " +
-                                "  ?);",
-                        Statement.RETURN_GENERATED_KEYS);
-                statement.setString(1, transaction.getSender().toString());
-                statement.setString(2, transaction.getReceiver().toString());
-                statement.setLong(3, transaction.getTime());
-                statement.setDouble(4, transaction.getAmount());
-                statement.executeUpdate();
-                ResultSet resultSet = statement.getGeneratedKeys();
-                if (resultSet.next()) {
-                    return resultSet.getInt(1);
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            } finally {
-                MySQLConnector.getInstance().closeConnection(connection);
+        try (Connection connection = MySQLConnector.getInstance().getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(
+                    "INSERT INTO " + KarmaPluginConfig.getInstance().getTransactionsTable() +
+                            "(sender_id, receiver_id, time_stamp, amount) " +
+                            "VALUES (" +
+                            " (Select player_id from " + KarmaPluginConfig.getInstance().getPlayerTable() + " where uuid = ?), " +
+                            " (Select player_id from " + KarmaPluginConfig.getInstance().getPlayerTable() + " where uuid = ?), " +
+                            "  ? , " +
+                            "  ?);",
+                    Statement.RETURN_GENERATED_KEYS);
+            statement.setString(1, transaction.getSender().toString());
+            statement.setString(2, transaction.getReceiver().toString());
+            statement.setLong(3, transaction.getTime());
+            statement.setDouble(4, transaction.getAmount());
+            statement.executeUpdate();
+            ResultSet resultSet = statement.getGeneratedKeys();
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -146,19 +136,14 @@ public class MySQLController implements DatabaseController {
      */
     @Override
     public void deleteTransaction(Transaction transaction) {
-        Connection connection = MySQLConnector.getInstance().getConnection();
-        if (connection != null) {
-            try {
-                PreparedStatement statement = connection.prepareStatement(
-                        "DELETE FROM " + KarmaPluginConfig.getInstance().getTransactionsTable() +
-                                " WHERE transaction_id = ?");
-                statement.setInt(1, transaction.getId());
-                statement.executeUpdate();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            } finally {
-                MySQLConnector.getInstance().closeConnection(connection);
-            }
+        try (Connection connection = MySQLConnector.getInstance().getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(
+                    "DELETE FROM " + KarmaPluginConfig.getInstance().getTransactionsTable() +
+                            " WHERE transaction_id = ?");
+            statement.setInt(1, transaction.getId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
@@ -170,29 +155,24 @@ public class MySQLController implements DatabaseController {
      */
     @Override
     public Integer insertPlayerData(PlayerData playerData) {
-        Connection connection = MySQLConnector.getInstance().getConnection();
-        if (connection != null) {
-            try {
-                PreparedStatement statement = connection
-                        .prepareStatement("INSERT INTO " + KarmaPluginConfig.getInstance().getPlayerTable() +
-                                        "(uuid, effect, effects_enabled) " +
-                                        "VALUES(?, ?, ?) ON DUPLICATE KEY UPDATE effect = ?, effects_enabled = ?",
-                                Statement.RETURN_GENERATED_KEYS);
-                statement.setString(1, playerData.getUuid().toString());
-                statement.setString(2, playerData.getEffect() != null ? playerData.getEffect().getName() : null);
-                statement.setBoolean(3, playerData.effectsEnabled());
-                statement.setString(4, playerData.getEffect() != null ? playerData.getEffect().getName() : null);
-                statement.setBoolean(5, playerData.effectsEnabled());
-                statement.executeUpdate();
-                ResultSet resultSet = statement.getGeneratedKeys();
-                if (resultSet.next()) {
-                    return resultSet.getInt(1);
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            } finally {
-                MySQLConnector.getInstance().closeConnection(connection);
+        try (Connection connection = MySQLConnector.getInstance().getConnection()) {
+            PreparedStatement statement = connection
+                    .prepareStatement("INSERT INTO " + KarmaPluginConfig.getInstance().getPlayerTable() +
+                                    "(uuid, effect, effects_enabled) " +
+                                    "VALUES(?, ?, ?) ON DUPLICATE KEY UPDATE effect = ?, effects_enabled = ?",
+                            Statement.RETURN_GENERATED_KEYS);
+            statement.setString(1, playerData.getUuid().toString());
+            statement.setString(2, playerData.getEffect() != null ? playerData.getEffect().getName() : null);
+            statement.setBoolean(3, playerData.effectsEnabled());
+            statement.setString(4, playerData.getEffect() != null ? playerData.getEffect().getName() : null);
+            statement.setBoolean(5, playerData.effectsEnabled());
+            statement.executeUpdate();
+            ResultSet resultSet = statement.getGeneratedKeys();
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -206,23 +186,18 @@ public class MySQLController implements DatabaseController {
     @Override
     public List<PlayerData> getTopList(Integer size) {
         List<PlayerData> topList = new ArrayList<>(size);
-        Connection connection = MySQLConnector.getInstance().getConnection();
-        if (connection != null) {
-            try {
-                PreparedStatement statement = connection
-                        .prepareStatement("SELECT SUM(t.amount) as amount, p.uuid " +
-                                "FROM " + KarmaPluginConfig.getInstance().getTransactionsTable() + " t " +
-                                "LEFT JOIN " + KarmaPluginConfig.getInstance().getPlayerTable() + " p ON t.receiver_id = p.player_id " +
-                                "GROUP BY receiver_id ORDER BY amount DESC LIMIT " + size);
-                ResultSet resultSet = statement.executeQuery();
-                while (resultSet.next()) {
-                    topList.add(getPlayerData(UUID.fromString(resultSet.getString("uuid"))));
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            } finally {
-                MySQLConnector.getInstance().closeConnection(connection);
+        try (Connection connection = MySQLConnector.getInstance().getConnection()) {
+            PreparedStatement statement = connection
+                    .prepareStatement("SELECT SUM(t.amount) as amount, p.uuid " +
+                            "FROM " + KarmaPluginConfig.getInstance().getTransactionsTable() + " t " +
+                            "LEFT JOIN " + KarmaPluginConfig.getInstance().getPlayerTable() + " p ON t.receiver_id = p.player_id " +
+                            "GROUP BY receiver_id ORDER BY amount DESC LIMIT " + size);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                topList.add(getPlayerData(UUID.fromString(resultSet.getString("uuid"))));
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return topList;
     }
