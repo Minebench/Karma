@@ -66,7 +66,7 @@ public class BungeeMessageListener implements PluginMessageListener {
         long delay = in.readLong();
         if (p != null) {
             ParticleTask.getInstance().removeCloud(p);
-            if (effect != null) {
+            if (particle != null || effect != null) {
                 ParticleTask.getInstance().addCloud(p, new ParticleCloud(p.getUniqueId(), particle, effect, delay));
             }
         }
