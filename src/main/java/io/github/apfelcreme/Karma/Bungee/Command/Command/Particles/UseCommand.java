@@ -45,27 +45,33 @@ public class UseCommand implements SubCommand {
         ProxiedPlayer player = (ProxiedPlayer) sender;
         if (player.hasPermission("karma.command.particles.use")) {
             if (args.length > 0) {
-                Effect effect = Effect.getEffect(args[0]);
-                if (effect != null && KarmaPluginConfig.getInstance().getParticles().values().contains(effect)) {
+                Effect effect = KarmaPluginConfig.getInstance().getEffect(args[0]);
+                if (effect != null) {
                     PlayerData playerData = KarmaPlugin.getInstance().getDatabaseController().getPlayerData(player.getUniqueId());
                     if (playerData != null) {
-                        int karmaThreshold = 0;
+                        int karmaThreshold = -1;
                         for (Map.Entry<Integer, Effect> entry : KarmaPluginConfig.getInstance().getParticles().entrySet()) {
                             if (entry.getValue().equals(effect)) {
                                 karmaThreshold = entry.getKey();
+                                break;
                             }
                         }
-                        if (karmaThreshold <= playerData.getKarma()) {
-                            playerData.setEffect(effect);
-                            playerData.save();
-                            KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("info.particles.use.success"));
-                            KarmaPlugin.getInstance().getLogger().info(player.getName()
-                                    + " changed his particles to " + effect.getDisplayName());
-                            if (VNPBungee.getInstance().getVanishStatus(player) != VNPBungee.VanishStatus.VANISHED) {
-                                BukkitMessenger.applyParticles(player, effect);
+                        if (karmaThreshold == -1) {
+                            if (karmaThreshold <= playerData.getKarma()) {
+                                playerData.setEffect(effect);
+                                playerData.save();
+                                KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("info.particles.use.success"));
+                                KarmaPlugin.getInstance().getLogger().info(player.getName()
+                                        + " changed his particles to " + effect.getDisplayName());
+                                if (VNPBungee.getInstance().getVanishStatus(player) != VNPBungee.VanishStatus.VANISHED) {
+                                    BukkitMessenger.applyParticles(player, effect);
+                                }
+                            } else {
+                                KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("error.notEnoughKarma"));
                             }
                         } else {
-                            KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("error.notEnoughKarma"));
+                            KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("error.unknownEffect")
+                                    .replace("{0}", args[0]));
                         }
                     }
                 } else {

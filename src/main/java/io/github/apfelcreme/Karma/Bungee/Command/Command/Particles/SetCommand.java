@@ -47,8 +47,8 @@ public class SetCommand implements SubCommand {
             if (args.length > 1) {
                 UUID targetUUID = KarmaPlugin.getInstance().getUUIDByName(args[0]);
                 if (targetUUID != null) {
-                    Effect effect = Effect.getEffect(args[1]);
-                    if (effect != null && KarmaPluginConfig.getInstance().getParticles().values().contains(effect)) {
+                    Effect effect = KarmaPluginConfig.getInstance().getEffect(args[1]);
+                    if (effect != null) {
                         PlayerData playerData = KarmaPlugin.getInstance().getDatabaseController().getPlayerData(targetUUID);
                         if (playerData != null) {
                             playerData.setEffect(effect);

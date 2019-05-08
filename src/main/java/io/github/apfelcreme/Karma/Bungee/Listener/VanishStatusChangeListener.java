@@ -39,17 +39,14 @@ public class VanishStatusChangeListener implements Listener {
 
     @EventHandler
     public void onVanishStatusChange(final VanishStatusChangeEvent event) {
-        plugin.getProxy().getScheduler().runAsync(plugin, new Runnable() {
-            @Override
-            public void run() {
-                if (!event.isVanishing()) {
-                    PlayerData playerData = plugin.getDatabaseController().getPlayerData(event.getPlayer().getUniqueId());
-                    if (playerData != null) {
-                        BukkitMessenger.applyParticles(event.getPlayer(), playerData.getEffect());
-                    }
-                } else {
-                    BukkitMessenger.applyParticles(event.getPlayer(), Effect.NONE);
+        plugin.getProxy().getScheduler().runAsync(plugin, () -> {
+            if (!event.isVanishing()) {
+                PlayerData playerData = plugin.getDatabaseController().getPlayerData(event.getPlayer().getUniqueId());
+                if (playerData != null) {
+                    BukkitMessenger.applyParticles(event.getPlayer(), playerData.getEffect());
                 }
+            } else {
+                BukkitMessenger.applyParticles(event.getPlayer(), null);
             }
         });
     }

@@ -8,6 +8,8 @@ import net.md_5.bungee.config.ConfigurationProvider;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -51,6 +53,10 @@ public class KarmaPluginConfig {
     private final ConfigurationProvider yamlProvider = ConfigurationProvider
             .getProvider(net.md_5.bungee.config.YamlConfiguration.class);
 
+    private Map<String, Effect> effects = new HashMap<>();
+    private Map<String, Effect> effectsByName = new HashMap<>();
+    private Map<Integer, Effect> levelMap = new TreeMap<>();
+
     /**
      * constructor
      */
@@ -71,6 +77,30 @@ public class KarmaPluginConfig {
                 createConfigFile(configuration.getString("languageFile"), languageConfigurationFile);
             }
             languageConfiguration = yamlProvider.load(languageConfigurationFile);
+
+            Configuration effectsConfig = configuration.getSection("effects");
+            for (String name : effectsConfig.getKeys()) {
+                Effect effect = new Effect(
+                        name,
+                        effectsConfig.getLong(name + ".delay"),
+                        languageConfiguration.getString("effects." + name + ".displayName"),
+                        languageConfiguration.getStringList("effects." + name + ".aliases")
+                );
+                effects.put(name.toLowerCase(), effect);
+                effectsByName.put(name.toLowerCase(), effect);
+                effectsByName.put(effect.getDisplayName().toLowerCase(), effect);
+                for (String alias : effect.getAliases()) {
+                    effectsByName.putIfAbsent(alias.toLowerCase(), effect);
+                }
+            }
+
+            Configuration section = configuration.getSection("levels");
+            for (String key : section.getKeys()) {
+                Effect effect = getEffect(section.getString(key));
+                if (effect != null) {
+                    levelMap.put(Integer.parseInt(key), effect);
+                }
+            }
 
             yamlProvider.save(configuration, configurationFile);
             yamlProvider.save(languageConfiguration, languageConfigurationFile);
@@ -205,15 +235,7 @@ public class KarmaPluginConfig {
      * @return a map containing all levels at which new particles are available
      */
     public Map<Integer, Effect> getParticles() {
-        Configuration section = configuration.getSection("levels");
-        Map<Integer, Effect> effectMap = new TreeMap<>();
-        for (String key : section.getKeys()) {
-            Effect effect = Effect.getEffect(section.getString(key));
-            if (effect != null) {
-                effectMap.put(Integer.parseInt(key), effect);
-            }
-        }
-        return effectMap;
+        return levelMap;
     }
 
     /**
@@ -230,6 +252,16 @@ public class KarmaPluginConfig {
         } else {
             return "Missing text node: " + key;
         }
+    }
+
+    /**
+     * returns the effect with the given name
+     *
+     * @param effectName an effect name
+     * @return an effect enum
+     */
+    public Effect getEffect(String effectName) {
+        return effectsByName.get(effectName.toLowerCase());
     }
 
     /**

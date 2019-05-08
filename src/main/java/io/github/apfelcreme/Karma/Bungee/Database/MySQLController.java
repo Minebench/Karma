@@ -8,7 +8,6 @@ import io.github.apfelcreme.Karma.Bungee.User.Transaction;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -79,8 +78,7 @@ public class MySQLController implements DatabaseController {
                         // player data was found
                         playerData = new PlayerData(
                                 uuid,
-                                Effect.getEffect(resultSet.getString("effect")) != null ?
-                                        Effect.getEffect(resultSet.getString("effect")) : Effect.NONE,
+                                KarmaPluginConfig.getInstance().getEffect(resultSet.getString("effect")),
                                 resultSet.getBoolean("effects_enabled"),
                                 doneTransactions,
                                 receivedTransactions
@@ -181,9 +179,9 @@ public class MySQLController implements DatabaseController {
                                         "VALUES(?, ?, ?) ON DUPLICATE KEY UPDATE effect = ?, effects_enabled = ?",
                                 Statement.RETURN_GENERATED_KEYS);
                 statement.setString(1, playerData.getUuid().toString());
-                statement.setString(2, playerData.getEffect() != null ? playerData.getEffect().name() : null);
+                statement.setString(2, playerData.getEffect() != null ? playerData.getEffect().getName() : null);
                 statement.setBoolean(3, playerData.effectsEnabled());
-                statement.setString(4, playerData.getEffect() != null ? playerData.getEffect().name() : null);
+                statement.setString(4, playerData.getEffect() != null ? playerData.getEffect().getName() : null);
                 statement.setBoolean(5, playerData.effectsEnabled());
                 statement.executeUpdate();
                 ResultSet resultSet = statement.getGeneratedKeys();

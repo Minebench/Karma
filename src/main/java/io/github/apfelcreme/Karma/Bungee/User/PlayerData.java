@@ -120,15 +120,6 @@ public class PlayerData {
     }
 
     /**
-     * returns whether the player wants to see other players effects
-     *
-     * @return true or false
-     */
-    public Boolean getEffectsEnabled() {
-        return effectsEnabled;
-    }
-
-    /**
      * returns the list of transactions the player has done
      *
      * @return the list of transactions the player has done
@@ -169,7 +160,7 @@ public class PlayerData {
      *
      * @return true or false
      */
-    public Boolean effectsEnabled() {
+    public boolean effectsEnabled() {
         return effectsEnabled;
     }
 

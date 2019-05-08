@@ -22,44 +22,28 @@ import java.util.List;
  *
  * @author Lord36 aka Apfelcreme
  */
-public enum Effect {
+public class Effect {
 
-    CLOUD,
-    COLOURED_DUST,
-    CRIT,
-    ENDER_SIGNAL,
-    EXPLOSION,
-    EXPLOSION_HUGE,
-    EXPLOSION_LARGE,
-    FIREWORKS_SPARK,
-    FLAME,
-    FLYING_GLYPH,
-    HAPPY_VILLAGER,
-    HEART,
-    INSTANT_SPELL,
-    LARGE_SMOKE,
-    LAVA_POP,
-    LAVADRIP,
-    MAGIC_CRIT,
-    MOBSPAWNER_FLAMES,
-    NONE,
-    NOTE,
-    PARTICLE_SMOKE,
-    PORTAL,
-    POTION_BREAK,
-    POTION_SWIRL,
-    POTION_SWIRL_TRANSPARENT,
-    SLIME,
-    SMALL_SMOKE,
-    SMOKE,
-    SNOW_SHOVEL,
-    SNOWBALL_BREAK,
-    SPELL,
-    SPLASH,
-    VILLAGER_THUNDERCLOUD,
-    VOID_FOG,
-    WATERDRIP,
-    WITCH_MAGIC;
+    private final String name;
+    private final long delay;
+    private final String displayName;
+    private final List<String> aliases;
+
+    public Effect(String name, long delay, String displayName, List<String> aliases) {
+        this.name = name;
+        this.delay = delay;
+        this.displayName = displayName;
+        this.aliases = aliases;
+    }
+
+    /**
+     * returns the name of the effect like it's in the config
+     *
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
 
     /**
      * returns the delay that is used on the effect when being scheduled in a thread
@@ -67,7 +51,7 @@ public enum Effect {
      * @return the delay
      */
     public Long getDelay() {
-        return KarmaPluginConfig.getInstance().getConfiguration().getLong("effects." + name() + ".delay");
+        return delay;
     }
 
     /**
@@ -76,7 +60,7 @@ public enum Effect {
      * @return the name of the effect
      */
     public String getDisplayName() {
-        return KarmaPluginConfig.getInstance().getLanguageConfiguration().getString("effects." + name() + ".displayName");
+        return displayName;
     }
 
     /**
@@ -85,29 +69,7 @@ public enum Effect {
      * @return a list of strings representing the effect
      */
     public List<String> getAliases() {
-        return KarmaPluginConfig.getInstance().getLanguageConfiguration().getStringList("effects." + name() + ".aliases");
+        return aliases;
     }
 
-    /**
-     * returns the effect with the given name
-     *
-     * @param effectName an effect name
-     * @return an effect enum
-     */
-    public static Effect getEffect(String effectName) {
-        for (Effect effect : Effect.values()) {
-            if (effect.name().equalsIgnoreCase(effectName)) {
-                return effect;
-            }
-            if (effect.getDisplayName().equalsIgnoreCase(effectName)) {
-                return effect;
-            }
-            for (String alias : effect.getAliases()) {
-                if (alias.equalsIgnoreCase(effectName)) {
-                    return effect;
-                }
-            }
-        }
-        return null;
-    }
 }
