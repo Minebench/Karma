@@ -42,6 +42,8 @@ public class BukkitMessenger {
             out.writeUTF(player.getUniqueId().toString());
             out.writeUTF(effect != null ? effect.getName() : "NONE");
             out.writeLong(effect != null ? effect.getDelay() : 0);
+            out.writeInt(effect != null ? effect.getCount() : 0);
+            out.writeDouble(effect != null ? effect.getExtra() : -1);
             target.sendData("karma:applyparticles", out.toByteArray());
         }
     }
