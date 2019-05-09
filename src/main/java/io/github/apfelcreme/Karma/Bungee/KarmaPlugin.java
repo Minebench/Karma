@@ -1,5 +1,6 @@
 package io.github.apfelcreme.Karma.Bungee;
 
+import de.themoep.vnpbungee.VNPBungee;
 import io.github.apfelcreme.Karma.Bungee.Command.SubCommandExecutor;
 import io.github.apfelcreme.Karma.Bungee.Command.TabCompleter;
 import io.github.apfelcreme.Karma.Bungee.Command.ThxCommandExecutor;
@@ -63,6 +64,11 @@ public class KarmaPlugin extends Plugin {
     private UUIDDBPlugin uuidDb = null;
 
     /**
+     * reference of VNPBungee
+     */
+    private VNPBungee vnpBungee = null;
+
+    /**
      * the database controller
      */
     private DatabaseController databaseController;
@@ -91,6 +97,10 @@ public class KarmaPlugin extends Plugin {
         }
         uuidCache = new HashMap<>();
         playerDataCache = new HashMap<>();
+
+        if (getProxy().getPluginManager().getPlugin("VNPBungee") != null) {
+            vnpBungee = VNPBungee.getInstance();
+        }
 
         // init the config
         KarmaPluginConfig.getInstance();
@@ -355,4 +365,17 @@ public class KarmaPlugin extends Plugin {
         }
     }
 
+    /**
+     * check if one player can see another one
+     *
+     * @param sender the sender of the command
+     * @param player the player to check
+     * @return true if he can see him (or vanish hiding is disabled); false if not
+     */
+    public boolean canSee(ProxiedPlayer sender, ProxiedPlayer player) {
+        if (vnpBungee != null && KarmaPluginConfig.getInstance().hideVanished()) {
+            return vnpBungee.canSee(sender, player);
+        }
+        return true;
+    }
 }

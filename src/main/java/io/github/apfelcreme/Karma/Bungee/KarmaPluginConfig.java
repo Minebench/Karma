@@ -229,6 +229,15 @@ public class KarmaPluginConfig {
     }
 
     /**
+     * returns whether vanished players should be hidden or not
+     *
+     * @return true or false
+     */
+    public boolean hideVanished() {
+        return configuration.getBoolean("hideVanished", false);
+    }
+
+    /**
      * returns the configuration object
      *
      * @return the configuration object

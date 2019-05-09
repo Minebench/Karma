@@ -8,6 +8,7 @@ karmaRegenerationDays: 7
 useParticles: true
 apiUrlName: 'https://api.mojang.com/user/profiles/{0}/names'
 apiUrlUUID: 'https://api.mojang.com/users/profiles/minecraft/{0}'
+hideVanished: false
 sql:
   user: 'root'
   password: ''

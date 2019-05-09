@@ -1,9 +1,7 @@
 package io.github.apfelcreme.Karma.Bungee.Command;
 
-import de.themoep.vnpbungee.VNPBungee;
 import io.github.apfelcreme.Karma.Bungee.KarmaPlugin;
 import io.github.apfelcreme.Karma.Bungee.KarmaPluginConfig;
-import io.github.apfelcreme.Karma.Bungee.Particle.Effect;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -120,9 +118,8 @@ public class TabCompleter implements Listener {
 
     public static Collection<String> getPlayers(CommandSender sender) {
         List<String> players = new ArrayList<>();
-        VNPBungee vnpBungee = VNPBungee.getInstance();
         for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
-            if (vnpBungee == null || !(sender instanceof ProxiedPlayer) || vnpBungee.canSee((ProxiedPlayer) sender, player)) {
+            if (KarmaPlugin.getInstance().canSee((ProxiedPlayer) sender, player)) {
                 players.add(player.getName());
             }
         }
