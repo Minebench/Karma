@@ -118,7 +118,7 @@ public class KarmaPlugin extends Plugin {
         karmaCommandExecutor.addSubCommand(new io.github.apfelcreme.Karma.Bungee.Command.Command.Karma.ReloadCommand());
         karmaCommandExecutor.addSubCommand(new io.github.apfelcreme.Karma.Bungee.Command.Command.Karma.ResetCommand());
         karmaCommandExecutor.addSubCommand(new io.github.apfelcreme.Karma.Bungee.Command.Command.Karma.TopCommand());
-        particlesCommandExecutor = new SubCommandExecutor("particles", "particle");
+        particlesCommandExecutor = new SubCommandExecutor("particles", "partikel");
         particlesCommandExecutor.addSubCommand(new io.github.apfelcreme.Karma.Bungee.Command.Command.Particles.HelpCommand());
         particlesCommandExecutor.addSubCommand(new io.github.apfelcreme.Karma.Bungee.Command.Command.Particles.ListCommand());
         particlesCommandExecutor.addSubCommand(new io.github.apfelcreme.Karma.Bungee.Command.Command.Particles.SetCommand());
