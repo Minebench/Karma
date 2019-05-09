@@ -1,6 +1,5 @@
 package io.github.apfelcreme.Karma.Bungee.Command.Command.Particles;
 
-import de.themoep.vnpbungee.VNPBungee;
 import io.github.apfelcreme.Karma.Bungee.BukkitMessenger;
 import io.github.apfelcreme.Karma.Bungee.Command.SubCommand;
 import io.github.apfelcreme.Karma.Bungee.Command.TabCompleter;
@@ -57,8 +56,7 @@ public class SetCommand implements SubCommand {
                             KarmaPlugin.getInstance().getLogger().info(args[0] + "s Particles were set to "
                                     + effect.getDisplayName() + " by " + player.getName());
                             ProxiedPlayer targetPlayer = ProxyServer.getInstance().getPlayer(targetUUID);
-                            if ((targetPlayer != null)
-                                    && (VNPBungee.getInstance().getVanishStatus(targetPlayer) != VNPBungee.VanishStatus.VANISHED)) {
+                            if (targetPlayer != null) {
                                 BukkitMessenger.applyParticles(targetPlayer, effect);
                             }
                         }

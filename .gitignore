@@ -45,3 +45,11 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# maven output
+target/
+dependency-reduced-pom.xml
+
+# IntelliJ Idea files
+.idea
+*.iml

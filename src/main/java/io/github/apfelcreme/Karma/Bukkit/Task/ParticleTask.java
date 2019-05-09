@@ -78,9 +78,11 @@ public class ParticleTask {
             public void run() {
                 for (Map.Entry<Player, ParticleCloud> entry : playerEffectMap.entrySet()) {
                     Player player = entry.getKey();
-                    ParticleCloud particleCloud = entry.getValue();
-                    if ((runs % particleCloud.getDelay()) == 0) {
-                        particleCloud.display(player.getLocation());
+                    if (KarmaPlugin.getInstance().getVnp() == null || !KarmaPlugin.getInstance().getVnp().getManager().isVanished(player)) {
+                        ParticleCloud particleCloud = entry.getValue();
+                        if ((runs % particleCloud.getDelay()) == 0) {
+                            particleCloud.display(player.getLocation());
+                        }
                     }
                     runs++;
                 }

@@ -8,7 +8,6 @@ import io.github.apfelcreme.Karma.Bungee.Database.DatabaseController;
 import io.github.apfelcreme.Karma.Bungee.Database.MySQLConnector;
 import io.github.apfelcreme.Karma.Bungee.Database.MySQLController;
 import io.github.apfelcreme.Karma.Bungee.Listener.ServerSwitchListener;
-import io.github.apfelcreme.Karma.Bungee.Listener.VanishStatusChangeListener;
 import io.github.apfelcreme.Karma.Bungee.User.PlayerData;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
@@ -131,7 +130,6 @@ public class KarmaPlugin extends Plugin {
         if (KarmaPluginConfig.getInstance().useParticles()) {
             getProxy().getPluginManager().registerCommand(this, particlesCommandExecutor);
             getProxy().getPluginManager().registerListener(this, new ServerSwitchListener(this));
-            getProxy().getPluginManager().registerListener(this, new VanishStatusChangeListener(this));
         }
         // register the messaging channel
         getProxy().registerChannel("karma:applyparticles");

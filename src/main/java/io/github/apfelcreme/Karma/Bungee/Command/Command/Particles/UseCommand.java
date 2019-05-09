@@ -56,9 +56,7 @@ public class UseCommand implements SubCommand {
                                 KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("info.particles.use.success"));
                                 KarmaPlugin.getInstance().getLogger().info(player.getName()
                                         + " changed his particles to " + effect.getDisplayName());
-                                if (VNPBungee.getInstance().getVanishStatus(player) != VNPBungee.VanishStatus.VANISHED) {
-                                    BukkitMessenger.applyParticles(player, effect);
-                                }
+                                BukkitMessenger.applyParticles(player, effect);
                             } else {
                                 KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("error.notEnoughKarma"));
                             }

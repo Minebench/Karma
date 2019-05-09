@@ -2,6 +2,7 @@ package io.github.apfelcreme.Karma.Bukkit;
 
 import io.github.apfelcreme.Karma.Bukkit.Listener.PlayerQuitListener;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.kitteh.vanish.VanishPlugin;
 
 /**
  * Copyright (C) 2016 Lord36 aka Apfelcreme
@@ -24,6 +25,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class KarmaPlugin extends JavaPlugin {
 
     private static KarmaPlugin instance = null;
+    private VanishPlugin vnp;
 
     @Override
     public void onEnable() {
@@ -35,6 +37,10 @@ public class KarmaPlugin extends JavaPlugin {
 
         // register a listener
         getServer().getPluginManager().registerEvents(new PlayerQuitListener(), this);
+        
+        if (getServer().getPluginManager().isPluginEnabled("VanishNoPacket")) {
+            vnp = (VanishPlugin) getServer().getPluginManager().getPlugin("VanishNoPacket");
+        }
     }
 
     /**
@@ -44,5 +50,14 @@ public class KarmaPlugin extends JavaPlugin {
      */
     public static KarmaPlugin getInstance() {
         return instance;
+    }
+
+    /**
+     * returns the instance of VanishNoPacket
+     *
+     * @return the VNP instance or null if not available
+     */
+    public VanishPlugin getVnp() {
+        return vnp;
     }
 }
