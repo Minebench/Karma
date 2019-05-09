@@ -70,7 +70,7 @@ public class UseCommand implements SubCommand {
                                 KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("error.notEnoughKarma"));
                             }
                         } else {
-                            KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("error.unknownEffect")
+                            KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("error.unavailableEffect")
                                     .replace("{0}", args[0]));
                         }
                     }

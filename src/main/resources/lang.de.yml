@@ -10,6 +10,7 @@ texts:
     insaneKarmaAmount: '&c Du kannst {0} nicht &e{1}&c Karma geben!'
     unknownCommand: '&c Die Funktion {0} existiert nicht!'
     unknownEffect: '&C Der Effekt {0} existiert nicht!'
+    unavailableEffect: '&C Der Effekt {0} ist nicht verfügbar nicht!'
     unknownPlayer: '&c Der angegebene Spieler ist unbekannt!'
     wrongUsage:
       karma:
