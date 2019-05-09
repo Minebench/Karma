@@ -6,10 +6,12 @@ import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
+import net.md_5.bungee.api.plugin.TabExecutor;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -30,12 +32,12 @@ import java.util.Map;
  *
  * @author Lord36 aka Apfelcreme
  */
-public class SubCommandExecutor extends Command {
+public class SubCommandExecutor extends Command implements TabExecutor {
 
     private Map<String, SubCommand> subCommands = new HashMap<>();
 
     public SubCommandExecutor(String name, String... aliases) {
-        super(name, null, aliases);
+        super(name, "karma.command." + name.toLowerCase(), aliases);
     }
 
     /**
@@ -62,7 +64,7 @@ public class SubCommandExecutor extends Command {
         if (commandSender instanceof ProxiedPlayer) {
             SubCommand subCommand;
             if (strings.length > 0) {
-                subCommand = subCommands.get(strings[0]);
+                subCommand = subCommands.get(strings[0].toLowerCase());
                 if (subCommand == null) {
                     KarmaPlugin.sendMessage(commandSender, KarmaPluginConfig.getInstance().getText("error.unknownCommand")
                             .replace("{0}", strings[0]));
@@ -81,6 +83,29 @@ public class SubCommandExecutor extends Command {
         } else {
             ProxyServer.getInstance().getLogger().info("Command cannot be used from console!");
         }
+    }
+
+    @Override
+    public Iterable<String> onTabComplete(CommandSender sender, String[] args) {
+        List<String> completions = new ArrayList<>();
+        if (args.length == 0) {
+            completions.addAll(subCommands.keySet());
+        } else if (args.length == 1) {
+            SubCommand subCommand = getSubCommand(args[0]);
+            if (subCommand != null && sender.hasPermission(getPermission() + "." + args[0].toLowerCase())) {
+                completions.addAll(subCommand.getTabCompletions(sender, args));
+            } else {
+                subCommands.keySet().stream()
+                        .filter(n -> n.startsWith(args[0].toLowerCase()) && sender.hasPermission(getPermission() + "." + n))
+                        .forEach(completions::add);
+            }
+        } else {
+            SubCommand subCommand = getSubCommand(args[0]);
+            if (subCommand != null && sender.hasPermission(getPermission() + "." + args[0].toLowerCase())) {
+                completions.addAll(subCommand.getTabCompletions(sender, args));
+            }
+        }
+        return completions;
     }
 
     public Map<String, SubCommand> getSubCommands() {
