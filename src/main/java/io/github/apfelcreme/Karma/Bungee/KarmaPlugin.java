@@ -344,4 +344,15 @@ public class KarmaPlugin extends Plugin {
         return Pattern.matches("([0-9])*", string);
     }
 
+    /**
+     * log a debug message
+     *
+     * @param message the message to log
+     */
+    public static void logDebug(String message) {
+        if (KarmaPluginConfig.getInstance().isDebug()) {
+            KarmaPlugin.getInstance().getLogger().info("[Debug] " + message);
+        }
+    }
+
 }

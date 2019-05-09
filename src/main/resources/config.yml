@@ -1,3 +1,4 @@
+debug: true
 languageFile: 'lang.de.yml'
 pageSize: 10
 topListSize: 5

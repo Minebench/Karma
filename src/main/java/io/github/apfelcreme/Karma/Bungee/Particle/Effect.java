@@ -72,4 +72,14 @@ public class Effect {
         return aliases;
     }
 
+    @Override
+    public String toString() {
+        return "Effect{"
+                + "name=" + getName()
+                + ", delay=" + getDelay()
+                + ", displayName=" + getDisplayName()
+                + ", aliases=" + aliases
+                + "}";
+    }
+
 }

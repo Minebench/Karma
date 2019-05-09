@@ -2,7 +2,6 @@ package io.github.apfelcreme.Karma.Bungee.Database;
 
 import io.github.apfelcreme.Karma.Bungee.KarmaPlugin;
 import io.github.apfelcreme.Karma.Bungee.KarmaPluginConfig;
-import io.github.apfelcreme.Karma.Bungee.Particle.Effect;
 import io.github.apfelcreme.Karma.Bungee.User.PlayerData;
 import io.github.apfelcreme.Karma.Bungee.User.Transaction;
 
@@ -74,18 +73,22 @@ public class MySQLController implements DatabaseController {
                 resultSet = statement.executeQuery();
                 if (resultSet.first()) {
                     // player data was found
+                    String effectName = resultSet.getString("effect");
                     playerData = new PlayerData(
                             uuid,
-                            KarmaPluginConfig.getInstance().getEffect(resultSet.getString("effect")),
+                            KarmaPluginConfig.getInstance().getEffect(effectName),
                             resultSet.getBoolean("effects_enabled"),
                             doneTransactions,
                             receivedTransactions
                     );
+                    if (playerData.getEffect() == null && effectName != null) {
+                        KarmaPlugin.getInstance().getLogger().warning("Could not load effect with name " + effectName + " for player " + uuid);
+                    }
                     KarmaPlugin.getInstance().getPlayerDataCache().put(uuid, playerData);
                     return playerData;
                 } else {
                     // player did not exist -> create
-                    playerData = new PlayerData(uuid, null, true, new ArrayList<Transaction>(), new ArrayList<Transaction>());
+                    playerData = new PlayerData(uuid, null, true, new ArrayList<>(), new ArrayList<>());
                     playerData.save();
                     return playerData;
                 }

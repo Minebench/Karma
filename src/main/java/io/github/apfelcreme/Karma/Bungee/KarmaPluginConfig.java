@@ -9,7 +9,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -53,8 +52,24 @@ public class KarmaPluginConfig {
     private final ConfigurationProvider yamlProvider = ConfigurationProvider
             .getProvider(net.md_5.bungee.config.YamlConfiguration.class);
 
+    /**
+     * debugging
+     */
+    private boolean debug = true;
+
+    /**
+     * the configured effects
+     */
     private Map<String, Effect> effects = new HashMap<>();
+
+    /**
+     * map names to effects
+     */
     private Map<String, Effect> effectsByName = new HashMap<>();
+
+    /**
+     * the levels
+     */
     private Map<Integer, Effect> levelMap = new TreeMap<>();
 
     /**
@@ -78,6 +93,8 @@ public class KarmaPluginConfig {
             }
             languageConfiguration = yamlProvider.load(languageConfigurationFile);
 
+            debug = configuration.getBoolean("debug", debug);
+
             Configuration effectsConfig = configuration.getSection("effects");
             for (String name : effectsConfig.getKeys()) {
                 Effect effect = new Effect(
@@ -86,6 +103,7 @@ public class KarmaPluginConfig {
                         languageConfiguration.getString("effects." + name + ".displayName"),
                         languageConfiguration.getStringList("effects." + name + ".aliases")
                 );
+                KarmaPlugin.logDebug("Loaded effect " + effect);
                 effects.put(name.toLowerCase(), effect);
                 effectsByName.put(name.toLowerCase(), effect);
                 effectsByName.put(effect.getDisplayName().toLowerCase(), effect);
@@ -93,12 +111,17 @@ public class KarmaPluginConfig {
                     effectsByName.putIfAbsent(alias.toLowerCase(), effect);
                 }
             }
+            KarmaPlugin.getInstance().getLogger().info("Loaded " + effects.size() + " effects from config!");
+            KarmaPlugin.logDebug(effectsByName.size() + " effects names and alias mappings.");
 
             Configuration section = configuration.getSection("levels");
             for (String key : section.getKeys()) {
                 Effect effect = getEffect(section.getString(key));
                 if (effect != null) {
                     levelMap.put(Integer.parseInt(key), effect);
+                    KarmaPlugin.logDebug("Level " + key + " is using effect " + effect.getName());
+                } else {
+                    KarmaPlugin.getInstance().getLogger().warning("Could not find level with name " + section.getString(key) + " for karma amount " + key);
                 }
             }
 
@@ -277,5 +300,14 @@ public class KarmaPluginConfig {
             instance = new KarmaPluginConfig();
         }
         return instance;
+    }
+
+    /**
+     * whether or not debugging is enabled
+     *
+     * @return if debugging is enabled
+     */
+    public boolean isDebug() {
+        return debug;
     }
 }
