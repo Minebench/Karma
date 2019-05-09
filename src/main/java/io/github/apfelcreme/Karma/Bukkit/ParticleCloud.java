@@ -46,16 +46,24 @@ public class ParticleCloud {
             Color.TEAL
     };
 
-    private UUID owner;
-    private Particle particle;
-    private Effect effect;
-    private long delay;
+    private final UUID owner;
+    private final Particle particle;
+    private final Effect effect;
+    private final long delay;
+    private final int count;
+    private final double extra;
 
-    public ParticleCloud(UUID owner, Particle particle, Effect effect, long delay) {
+    public ParticleCloud(UUID owner, Particle particle, Effect effect, long delay, int count, double extra) {
         this.owner = owner;
         this.particle = particle;
         this.effect = effect;
         this.delay = delay;
+        this.count = count;
+        if (extra < 0 && particle != Particle.NOTE) {
+            // notes get random
+            extra = 0;
+        }
+        this.extra = extra;
     }
 
     /**
@@ -67,21 +75,17 @@ public class ParticleCloud {
 
         if (particle != null) {
             Object data = null;
-            double extra = 0;
-            if (particle == Particle.NOTE) {
+            double extra = this.extra;
+            if (extra < 0) {
                 extra = (int) (Math.random() * 24);
             }
             if (particle == Particle.REDSTONE) {
                 data = new Particle.DustOptions(COLORS[RANDOM.nextInt(COLORS.length)], 1);
             }
-            if (particle == Particle.PORTAL) {
-                // makes them move instead of just falling down
-                extra = 1;
-            }
-            location.getWorld().spawnParticle(particle, location, 20, 0.5f, 1.5f, 0.5f, extra, data);
+            location.getWorld().spawnParticle(particle, location, count, 0.5f, 1.5f, 0.5f, extra, data);
         }
         if (effect != null) {
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < count; i++) {
                 location.getWorld().playEffect(location, effect, 0, 1);
             }
         }
@@ -121,6 +125,8 @@ public class ParticleCloud {
                 ", particle=" + particle +
                 ", effect=" + effect +
                 ", delay=" + delay +
+                ", count=" + count +
+                ", extra=" + extra +
                 '}';
     }
 }

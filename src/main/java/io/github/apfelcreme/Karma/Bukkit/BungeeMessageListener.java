@@ -68,10 +68,12 @@ public class BungeeMessageListener implements PluginMessageListener {
             }
         }
         long delay = in.readLong();
+        int count = in.readInt();
+        double extra = in.readDouble();
         if (p != null) {
             ParticleTask.getInstance().removeCloud(p);
             if (particle != null || effect != null) {
-                ParticleTask.getInstance().addCloud(p, new ParticleCloud(p.getUniqueId(), particle, effect, delay));
+                ParticleTask.getInstance().addCloud(p, new ParticleCloud(p.getUniqueId(), particle, effect, delay, count, extra));
             }
         }
     }

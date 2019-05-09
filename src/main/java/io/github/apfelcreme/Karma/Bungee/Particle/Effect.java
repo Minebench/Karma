@@ -1,7 +1,5 @@
 package io.github.apfelcreme.Karma.Bungee.Particle;
 
-import io.github.apfelcreme.Karma.Bungee.KarmaPluginConfig;
-
 import java.util.List;
 
 /**
@@ -26,13 +24,17 @@ public class Effect {
 
     private final String name;
     private final long delay;
+    private final int count;
+    private final double extra;
     private final String displayName;
     private final List<String> aliases;
     private int karma = -1;
 
-    public Effect(String name, long delay, String displayName, List<String> aliases) {
+    public Effect(String name, long delay, int count, double extra, String displayName, List<String> aliases) {
         this.name = name;
         this.delay = delay;
+        this.count = count;
+        this.extra = extra;
         this.displayName = displayName;
         this.aliases = aliases;
     }
@@ -53,6 +55,24 @@ public class Effect {
      */
     public Long getDelay() {
         return delay;
+    }
+
+    /**
+     * the particle count
+     *
+     * @return the count
+     */
+    public int getCount() {
+        return count;
+    }
+
+    /**
+     * the particle extra
+     *
+     * @return extra
+     */
+    public double getExtra() {
+        return extra;
     }
 
     /**
@@ -97,6 +117,8 @@ public class Effect {
                 + "name=" + getName()
                 + ", karma=" + karma
                 + ", delay=" + getDelay()
+                + ", count=" + getCount()
+                + ", extra=" + getExtra()
                 + ", displayName=" + getDisplayName()
                 + ", aliases=" + aliases
                 + "}";

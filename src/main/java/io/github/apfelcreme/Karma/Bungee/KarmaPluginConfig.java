@@ -100,6 +100,8 @@ public class KarmaPluginConfig {
                 Effect effect = new Effect(
                         name,
                         effectsConfig.getLong(name + ".delay"),
+                        effectsConfig.getInt(name + ".count", 10),
+                        effectsConfig.getDouble(name + ".extra", -1),
                         languageConfiguration.getString("effects." + name + ".displayName", name.replace('_', '-').toLowerCase()),
                         languageConfiguration.getStringList("effects." + name + ".aliases")
                 );

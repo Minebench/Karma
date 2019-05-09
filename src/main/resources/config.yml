@@ -45,6 +45,7 @@ effects:
     karma: 150
   PORTAL:
     delay: 2
+    extra: 1
     karma: 175
   MOBSPAWNER_FLAMES:
     delay: 10
