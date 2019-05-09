@@ -53,6 +53,7 @@ public class ParticleCloud {
 
     public ParticleCloud(UUID owner, Particle particle, Effect effect, long delay) {
         this.owner = owner;
+        this.particle = particle;
         this.effect = effect;
         this.delay = delay;
     }
