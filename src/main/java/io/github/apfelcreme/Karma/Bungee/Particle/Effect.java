@@ -28,6 +28,7 @@ public class Effect {
     private final long delay;
     private final String displayName;
     private final List<String> aliases;
+    private int karma = -1;
 
     public Effect(String name, long delay, String displayName, List<String> aliases) {
         this.name = name;
@@ -72,6 +73,24 @@ public class Effect {
         return aliases;
     }
 
+    /**
+     * set the Karma required to use this effect
+     *
+     * @param karma the amount of karma, -1 if it can't be acquired with karma
+     */
+    public void setKarma(int karma) {
+        this.karma = karma;
+    }
+
+    /**
+     * get the Karma required to use this effect
+     *
+     * @return the amount of karma, -1 if it can't be acquired with karma
+     */
+    public int getKarma() {
+        return karma;
+    }
+
     @Override
     public String toString() {
         return "Effect{"
@@ -81,5 +100,4 @@ public class Effect {
                 + ", aliases=" + aliases
                 + "}";
     }
-
 }

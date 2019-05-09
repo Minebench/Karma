@@ -100,30 +100,24 @@ public class KarmaPluginConfig {
                 Effect effect = new Effect(
                         name,
                         effectsConfig.getLong(name + ".delay"),
-                        languageConfiguration.getString("effects." + name + ".displayName"),
+                        languageConfiguration.getString("effects." + name + ".displayName", name.replace('_', '-').toLowerCase()),
                         languageConfiguration.getStringList("effects." + name + ".aliases")
                 );
-                KarmaPlugin.logDebug("Loaded effect " + effect);
                 effects.put(name.toLowerCase(), effect);
                 effectsByName.put(name.toLowerCase(), effect);
                 effectsByName.put(effect.getDisplayName().toLowerCase(), effect);
                 for (String alias : effect.getAliases()) {
                     effectsByName.putIfAbsent(alias.toLowerCase(), effect);
                 }
-            }
-            KarmaPlugin.getInstance().getLogger().info("Loaded " + effects.size() + " effects from config!");
-            KarmaPlugin.logDebug(effectsByName.size() + " effects names and alias mappings.");
-
-            Configuration section = configuration.getSection("levels");
-            for (String key : section.getKeys()) {
-                Effect effect = getEffect(section.getString(key));
-                if (effect != null) {
-                    levelMap.put(Integer.parseInt(key), effect);
-                    KarmaPlugin.logDebug("Level " + key + " is using effect " + effect.getName());
-                } else {
-                    KarmaPlugin.getInstance().getLogger().warning("Could not find level with name " + section.getString(key) + " for karma amount " + key);
+                if (effectsConfig.contains(name + ".karma")) {
+                    int karma = effectsConfig.getInt(name + ".karma");
+                    effect.setKarma(karma);
+                    levelMap.put(karma, effect);
                 }
+                KarmaPlugin.logDebug("Loaded effect " + effect);
             }
+            KarmaPlugin.getInstance().getLogger().info("Loaded " + effects.size() + " effects and " + levelMap.size() + " levels from config!");
+            KarmaPlugin.logDebug(effectsByName.size() + " effects names and alias mappings.");
 
             yamlProvider.save(configuration, configurationFile);
             yamlProvider.save(languageConfiguration, languageConfigurationFile);

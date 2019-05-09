@@ -17,10 +17,72 @@ sql:
     players: 'karma_players'
     transactions: 'karma_transactions'
 effects:
-  CLOUD:
+# levels:
+  NONE:
+    delay: 0
+    karma: 0
+  WATER_BUBBLE:
     delay: 5
+    karma: 5
+  WATER_DROP:
+    delay: 5
+    karma: 25
+  HEART:
+    delay: 5
+    karma: 50
+  NOTE:
+    delay: 5
+    karma: 75
+  DRIP_LAVA:
+    delay: 5
+    karma: 100
+  FLAME:
+    delay: 3
+    karma: 125
+  FIREWORKS_SPARK:
+    delay: 10
+    karma: 150
+  PORTAL:
+    delay: 2
+    karma: 175
+  MOBSPAWNER_FLAMES:
+    delay: 10
+    karma: 200
   REDSTONE:
     delay: 3
+    karma: 225
+  LAVA:
+    delay: 4
+    karma: 250
+  SMOKE:
+    delay: 10
+    karma: 275
+  CLOUD:
+    delay: 5
+    karma: 300
+  ENCHANTMENT_TABLE:
+    delay: 5
+    karma: 400
+  SPELL_WITCH:
+    delay: 5
+    karma: 500
+  SPELL_MOB:
+    delay: 10
+    karma: 600
+  CRIT_MAGIC:
+    delay: 2
+    karma: 900
+  SMOKE_NORMAL:
+    delay: 5
+    karma: 1050
+  SMOKE_LARGE:
+    delay: 8
+    karma: 1250
+  VILLAGER_ANGRY:
+    delay: 5
+    karma: 1500
+
+# non-levels
   CRIT:
     delay: 10
   ENDER_SIGNAL:
@@ -31,46 +93,16 @@ effects:
     delay: 20
   EXPLOSION_LARGE:
     delay: 15
-  ENCHANTMENT_TABLE:
-    delay: 5
-  FIREWORKS_SPARK:
-    delay: 10
-  FLAME:
-    delay: 3
   VILLAGER_HAPPY:
-    delay: 5
-  HEART:
     delay: 5
   SPELL_INSTANT:
     delay: 5
-  SMOKE_LARGE:
-    delay: 8
-  DRIP_LAVA:
-    delay: 5
-  LAVA:
-    delay: 4
-  CRIT_MAGIC:
-    delay: 2
-  MOBSPAWNER_FLAMES:
-    delay: 10
-  NONE:
-    delay: 0
-  NOTE:
-    delay: 5
-  SMOKE_NORMAL:
-    delay: 5
-  PORTAL:
-    delay: 2
   POTION_BREAK:
-    delay: 10
-  SPELL_MOB:
     delay: 10
   SPELL_MOB_AMBIENT:
     delay: 10
   SLIME:
     delay: 5
-  SMOKE:
-    delay: 10
   SNOWBALL:
     delay: 4
   SNOW_SHOVEL:
@@ -79,29 +111,3 @@ effects:
     delay: 5
   WATER_SPLASH:
     delay: 5
-  VILLAGER_ANGRY:
-    delay: 5
-  WATER_DROP:
-    delay: 5
-  WATER_BUBBLE:
-    delay: 5
-  SPELL_WITCH:
-    delay: 5
-levels:
-  0: WATER_BUBBLE
-  5: VOID_FOG
-  25: WATER_DROP
-  50: HEART
-  75: NOTE
-  100: DRIP_LAVA
-  125: FLAME
-  150: FIREWORKS_SPARK
-  175: PORTAL
-  200: MOBSPAWNER_FLAMES
-  225: REDSTONE
-  250: LAVA
-  275: SMOKE
-  300: CLOUD
-  400: ENCHANTMENT_TABLE
-  500: SPELL_WITCH
-  600: SPELL_MOB

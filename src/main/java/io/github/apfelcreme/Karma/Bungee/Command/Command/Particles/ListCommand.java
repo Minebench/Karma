@@ -52,7 +52,7 @@ public class ListCommand implements SubCommand {
             for (Map.Entry<Integer, Effect> entry : effects.entrySet()) {
                 int karmaThreshold = entry.getKey();
                 Effect effect = entry.getValue();
-                if (karma >= karmaThreshold) {
+                if (karma >= karmaThreshold || sender.hasPermission("karma.effect." + effect.getName().toLowerCase())) {
                     KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("info.particles.list.elementOk")
                             .replace("{0}", effect.getDisplayName())
                             .replace("{1}", String.valueOf(karmaThreshold)));
