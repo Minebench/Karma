@@ -114,10 +114,10 @@ public class KarmaPluginConfig {
                     effect.setKarma(karma);
                     levelMap.put(karma, effect);
                 }
-                KarmaPlugin.logDebug("Loaded effect " + effect);
+                logDebug("Loaded effect " + effect);
             }
             KarmaPlugin.getInstance().getLogger().info("Loaded " + effects.size() + " effects and " + levelMap.size() + " levels from config!");
-            KarmaPlugin.logDebug(effectsByName.size() + " effects names and alias mappings.");
+            logDebug(effectsByName.size() + " effects names and alias mappings.");
 
             yamlProvider.save(configuration, configurationFile);
             yamlProvider.save(languageConfiguration, languageConfigurationFile);
@@ -303,6 +303,17 @@ public class KarmaPluginConfig {
             instance = new KarmaPluginConfig();
         }
         return instance;
+    }
+
+    /**
+     * log a debug message
+     *
+     * @param message the message to log
+     */
+    public void logDebug(String message) {
+        if (isDebug()) {
+            KarmaPlugin.getInstance().getLogger().info("[Debug] " + message);
+        }
     }
 
     /**

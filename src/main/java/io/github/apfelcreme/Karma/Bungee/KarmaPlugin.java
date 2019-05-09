@@ -353,17 +353,6 @@ public class KarmaPlugin extends Plugin {
     }
 
     /**
-     * log a debug message
-     *
-     * @param message the message to log
-     */
-    public static void logDebug(String message) {
-        if (KarmaPluginConfig.getInstance().isDebug()) {
-            KarmaPlugin.getInstance().getLogger().info("[Debug] " + message);
-        }
-    }
-
-    /**
      * check if one player can see another one
      *
      * @param sender the sender of the command
