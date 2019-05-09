@@ -73,6 +73,7 @@ public class ParticleTask {
         if (isActive()) {
             kill();
         }
+        KarmaPlugin.getInstance().logDebug("Creating new particle task");
         task = new BukkitRunnable() {
             @Override
             public void run() {
@@ -96,6 +97,7 @@ public class ParticleTask {
     private void kill() {
         if (task != null) {
             task.cancel();
+            KarmaPlugin.getInstance().logDebug("Cancelling old particle task");
         }
         task = null;
         runs = 0;

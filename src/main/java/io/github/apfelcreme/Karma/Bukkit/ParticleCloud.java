@@ -80,7 +80,9 @@ public class ParticleCloud {
             location.getWorld().spawnParticle(particle, location, 20, 0.5f, 1.5f, 0.5f, extra, data);
         }
         if (effect != null) {
-            location.getWorld().playEffect(location, effect, 0, 0);
+            for (int i = 0; i < 3; i++) {
+                location.getWorld().playEffect(location, effect, 0, 1);
+            }
         }
     }
 

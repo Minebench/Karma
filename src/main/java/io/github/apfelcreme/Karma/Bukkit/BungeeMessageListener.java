@@ -42,6 +42,7 @@ public class BungeeMessageListener implements PluginMessageListener {
 
     @Override
     public void onPluginMessageReceived(String s, Player player, byte[] bytes) {
+        plugin.logDebug("Received plugin message by " + player.getName() + " with tag " + s);
         if (!s.equals("karma:applyparticles")) {
             return;
         }
@@ -49,14 +50,17 @@ public class BungeeMessageListener implements PluginMessageListener {
         ByteArrayDataInput in = ByteStreams.newDataInput(bytes);
         Player p = plugin.getServer().getPlayer(UUID.fromString(in.readUTF()));
         String particleStr = in.readUTF();
+        plugin.logDebug("Particle string: " + particleStr);
         Particle particle = null;
         Effect effect = null;
         if (!particleStr.equalsIgnoreCase("none")) {
             try {
                 particle = Particle.valueOf(particleStr.toUpperCase());
+                plugin.logDebug("Particle: " + particle);
             } catch (IllegalArgumentException e1) {
                 try {
                     effect = Effect.valueOf(particleStr.toUpperCase());
+                    plugin.logDebug("Effect: " + effect);
                 } catch (IllegalArgumentException e2) {
                     plugin.getLogger().log(Level.WARNING, particleStr + " is neither a Particle nor an Effect?");
                     return;

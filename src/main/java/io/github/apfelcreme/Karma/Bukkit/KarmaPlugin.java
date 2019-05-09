@@ -26,10 +26,14 @@ public class KarmaPlugin extends JavaPlugin {
 
     private static KarmaPlugin instance = null;
     private VanishPlugin vnp;
+    private boolean debug = false;
 
     @Override
     public void onEnable() {
         instance = this;
+        String debugString = System.getProperty("pluginDebug", "*");
+        debug = debugString.equals("*") || debugString.contains(getName());
+        logDebug("Debugging enabled!");
 
         // register the Plugin channels for the bungee communication
         getServer().getMessenger().registerIncomingPluginChannel(this, "karma:applyparticles",
@@ -40,6 +44,12 @@ public class KarmaPlugin extends JavaPlugin {
         
         if (getServer().getPluginManager().isPluginEnabled("VanishNoPacket")) {
             vnp = (VanishPlugin) getServer().getPluginManager().getPlugin("VanishNoPacket");
+        }
+    }
+
+    public void logDebug(String message) {
+        if (debug) {
+            getLogger().info("[Debug] " + message);
         }
     }
 
