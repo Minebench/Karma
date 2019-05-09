@@ -95,6 +95,7 @@ public class Effect {
     public String toString() {
         return "Effect{"
                 + "name=" + getName()
+                + ", karma=" + karma
                 + ", delay=" + getDelay()
                 + ", displayName=" + getDisplayName()
                 + ", aliases=" + aliases
