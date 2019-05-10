@@ -55,7 +55,7 @@ public class ListCommand implements SubCommand {
                     .sorted(Comparator.comparingInt(Effect::getKarma))
                     .filter(effect -> effect.getKarma() > -1 || sender.hasPermission("karma.effect." + effect.getName().toLowerCase()))
                     .map(effect -> {
-                        if (finalKarma >= effect.getKarma()) {
+                        if (finalKarma >= effect.getKarma() || sender.hasPermission("karma.effect." + effect.getName().toLowerCase())) {
                             return KarmaPluginConfig.getInstance().getText("info.particles.list.elementOk")
                                     .replace("{0}", effect.getDisplayName())
                                     .replace("{1}", String.valueOf(effect.getKarma() > -1 ? effect.getKarma() : 0));
