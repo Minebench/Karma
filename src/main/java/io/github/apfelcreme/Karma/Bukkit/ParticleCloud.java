@@ -72,6 +72,16 @@ public class ParticleCloud {
      * @param location the location where the particles are displayed
      */
     public void display(Location location) {
+        display(location, count);
+    }
+
+    /**
+     * displays the particle effects at the given location
+     *
+     * @param location the location where the particles are displayed
+     * @param count the count to use
+     */
+    public void display(Location location, int count) {
 
         if (particle != null) {
             Object data = null;
@@ -116,6 +126,15 @@ public class ParticleCloud {
      */
     public long getDelay() {
         return delay;
+    }
+
+    /**
+     * returns the count of particles
+     *
+     * @return the particle count
+     */
+    public int getCount() {
+        return count;
     }
 
     @Override

@@ -81,8 +81,15 @@ public class ParticleTask {
                     Player player = entry.getKey();
                     if (KarmaPlugin.getInstance().getVnp() == null || !KarmaPlugin.getInstance().getVnp().getManager().isVanished(player)) {
                         ParticleCloud particleCloud = entry.getValue();
-                        if ((runs % particleCloud.getDelay()) == 0) {
-                            particleCloud.display(player.getLocation());
+                        if (particleCloud.getDelay() / 100 > 1) {
+                            long r = runs % particleCloud.getDelay();
+                            if (r < particleCloud.getDelay() / 10 && r % 20 == 0) {
+                                particleCloud.display(player.getLocation(), (int) (particleCloud.getCount() / (10 - (r % 10))));
+                            }
+                        } else {
+                            if ((runs % particleCloud.getDelay()) == 0) {
+                                particleCloud.display(player.getLocation());
+                            }
                         }
                     }
                     runs++;
