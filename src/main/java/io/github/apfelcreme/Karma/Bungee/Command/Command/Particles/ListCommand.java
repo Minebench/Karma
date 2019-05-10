@@ -51,17 +51,20 @@ public class ListCommand implements SubCommand {
             Collection<Effect> effects = KarmaPluginConfig.getInstance().getEffects();
             KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("info.particles.list.header"));
             double finalKarma = karma;
-            effects.stream().sorted(Comparator.comparingInt(Effect::getKarma)).forEachOrdered(effect -> {
-                if ((effect.getKarma() > -1 && finalKarma >= effect.getKarma()) || sender.hasPermission("karma.effect." + effect.getName().toLowerCase())) {
-                    KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("info.particles.list.elementOk")
-                            .replace("{0}", effect.getDisplayName())
-                            .replace("{1}", String.valueOf(effect.getKarma() > -1 ? effect.getKarma() : 0)));
-                } else if (effect.getKarma() > -1){
-                    KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("info.particles.list.elementNotOk")
-                            .replace("{0}", effect.getDisplayName())
-                            .replace("{1}", String.valueOf(effect.getKarma())));
-                }
-            });
+            effects.stream()
+                    .sorted(Comparator.comparingInt(Effect::getKarma))
+                    .filter(effect -> effect.getKarma() > -1 || sender.hasPermission("karma.effect." + effect.getName().toLowerCase()))
+                    .map(effect -> {
+                        if (finalKarma >= effect.getKarma()) {
+                            return KarmaPluginConfig.getInstance().getText("info.particles.list.elementOk")
+                                    .replace("{0}", effect.getDisplayName())
+                                    .replace("{1}", String.valueOf(effect.getKarma() > -1 ? effect.getKarma() : 0));
+                        }
+                        return KarmaPluginConfig.getInstance().getText("info.particles.list.elementNotOk")
+                                .replace("{0}", effect.getDisplayName())
+                                .replace("{1}", String.valueOf(effect.getKarma()));
+                    })
+                    .forEachOrdered(message -> KarmaPlugin.sendMessage(player, message));
         } else {
             KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("error.noPermission"));
         }

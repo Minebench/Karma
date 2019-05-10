@@ -49,8 +49,8 @@ public class UseCommand implements SubCommand {
                 if (effect != null) {
                     PlayerData playerData = KarmaPlugin.getInstance().getDatabaseController().getPlayerData(player.getUniqueId());
                     if (playerData != null) {
-                        if (effect.getKarma() > -1) {
-                            if (effect.getKarma() <= playerData.getKarma() || sender.hasPermission("karma.effect." + effect.getName().toLowerCase())) {
+                        if (effect.getKarma() > -1 || sender.hasPermission("karma.effect." + effect.getName().toLowerCase())) {
+                            if (effect.getKarma() <= playerData.getKarma()) {
                                 playerData.setEffect(effect);
                                 playerData.save();
                                 KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("info.particles.use.success"));
