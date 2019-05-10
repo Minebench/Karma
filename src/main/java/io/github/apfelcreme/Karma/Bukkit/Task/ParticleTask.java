@@ -83,7 +83,7 @@ public class ParticleTask {
                         ParticleCloud particleCloud = entry.getValue();
                         if (particleCloud.getDelay() / 100 > 1) {
                             long r = runs % particleCloud.getDelay();
-                            if (r < particleCloud.getDelay() / 10 && r % 10 == 0) {
+                            if (r < particleCloud.getDelay() / 10) {
                                 particleCloud.display(
                                         player.getLocation(),
                                         (int) (particleCloud.getCount() * (r / (particleCloud.getDelay() / 10.0)))
