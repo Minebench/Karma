@@ -43,8 +43,7 @@ public class SetCommand implements SubCommand {
      */
     @Override
     public void execute(CommandSender sender, String[] args) {
-        ProxiedPlayer player = (ProxiedPlayer) sender;
-        if (player.hasPermission("karma.command.particles.set")) {
+        if (sender.hasPermission("karma.command.particles.set")) {
             if (args.length > 1) {
                 UUID targetUUID = KarmaPlugin.getInstance().getUUIDByName(args[0]);
                 if (targetUUID != null) {
@@ -54,26 +53,26 @@ public class SetCommand implements SubCommand {
                         if (playerData != null) {
                             playerData.setEffect(effect);
                             playerData.save();
-                            KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("info.particles.set.success"));
+                            KarmaPlugin.sendMessage(sender, KarmaPluginConfig.getInstance().getText("info.particles.set.success",
+                                    "effect", effect.getDisplayName(), "player", args[0]));
                             KarmaPlugin.getInstance().getLogger().info(args[0] + "s Particles were set to "
-                                    + effect.getDisplayName() + " by " + player.getName());
+                                    + effect.getDisplayName() + " by " + sender.getName());
                             ProxiedPlayer targetPlayer = ProxyServer.getInstance().getPlayer(targetUUID);
                             if (targetPlayer != null) {
                                 BukkitMessenger.applyParticles(targetPlayer, effect);
                             }
                         }
                     } else {
-                        KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("error.unknownEffect")
-                                .replace("{0}", args[1]));
+                        KarmaPlugin.sendMessage(sender, KarmaPluginConfig.getInstance().getText("error.unknownEffect", "input", args[1]));
                     }
                 } else {
-                    KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("error.unknownPlayer"));
+                    KarmaPlugin.sendMessage(sender, KarmaPluginConfig.getInstance().getText("error.unknownPlayer"));
                 }
             } else {
-                KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("error.wrongUsage.particles.set"));
+                KarmaPlugin.sendMessage(sender, KarmaPluginConfig.getInstance().getText("error.wrongUsage.particles.set"));
             }
         } else {
-            KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("error.noPermission"));
+            KarmaPlugin.sendMessage(sender, KarmaPluginConfig.getInstance().getText("error.noPermission"));
         }
     }
 

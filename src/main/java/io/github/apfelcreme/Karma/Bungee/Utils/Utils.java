@@ -1,9 +1,12 @@
-package io.github.apfelcreme.Karma.Bungee.Command.Request;
+package io.github.apfelcreme.Karma.Bungee.Utils;
 
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 
-/**
- * Copyright (C) 2016 Lord36 aka Apfelcreme
+import java.util.UUID;
+
+/*
+ * Copyright (C) 2018 Max Lee (mail@moep.tv)
  * <p>
  * This program is free software;
  * you can redistribute it and/or modify it under the terms of the GNU General
@@ -18,35 +21,17 @@ import net.md_5.bungee.api.CommandSender;
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * @author Lord36 aka Apfelcreme
+ * @author Max Lee aka Phoenix616
  */
-public abstract class Request {
+public class Utils {
 
     /**
-     * the sender who created the request
-     */
-    private final CommandSender sender;
-
-    /**
-     * constructor
+     * get the UUID of a sender or a zero UUID if it's the console
      *
-     * @param sender the sender who created the request
+     * @param sender the sender
+     * @return the UUID
      */
-    public Request(CommandSender sender) {
-        this.sender = sender;
-    }
-
-    /**
-     * executes the request
-     */
-    public abstract void execute();
-
-    /**
-     * returns the sender who created the request
-     *
-     * @return the sender who created the request
-     */
-    public CommandSender getSender() {
-        return sender;
+    public static UUID getUuid(CommandSender sender) {
+        return sender instanceof ProxiedPlayer ? ((ProxiedPlayer) sender).getUniqueId() : new UUID(0, 0);
     }
 }

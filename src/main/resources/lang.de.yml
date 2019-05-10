@@ -75,9 +75,9 @@ texts:
         elementNotOk: '&8 - &d{0}: &c{1} Karma'
       request: '&f Bestätige die Aktion mit &d/particles confirm'
       set:
-        success: '&f Du hast die Partikel erfolgreich gewechselt'
+        success: '&f Du hast die Partikel von {player} auf {effect} gewechselt'
       use:
-        success: '&f Du hast deine Partikel erfolgreich gewechselt'
+        success: '&f Du hast deine Partikel auf {effect} gewechselt'
 effects:
   CLOUD:
     displayName: Cloud

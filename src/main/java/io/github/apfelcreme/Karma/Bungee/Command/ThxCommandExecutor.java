@@ -36,11 +36,9 @@ public class ThxCommandExecutor extends Command implements TabExecutor {
 
     @Override
     public void execute(final CommandSender commandSender, final String[] strings) {
-        if (commandSender instanceof ProxiedPlayer) {
-            ProxyServer.getInstance().getScheduler().runAsync(KarmaPlugin.getInstance(),
-                    () -> KarmaPlugin.getInstance().getKarmaCommand().getSubCommand("give").execute(commandSender, strings)
-            );
-        }
+        ProxyServer.getInstance().getScheduler().runAsync(KarmaPlugin.getInstance(),
+                () -> KarmaPlugin.getInstance().getKarmaCommand().getSubCommand("give").execute(commandSender, strings)
+        );
     }
 
     @Override

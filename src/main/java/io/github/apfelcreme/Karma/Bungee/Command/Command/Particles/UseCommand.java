@@ -42,6 +42,10 @@ public class UseCommand implements SubCommand {
      */
     @Override
     public void execute(CommandSender sender, String[] args) {
+        if (!(sender instanceof ProxiedPlayer)) {
+            sender.sendMessage("Player only command.");
+            return;
+        }
         ProxiedPlayer player = (ProxiedPlayer) sender;
         if (player.hasPermission("karma.command.particles.use")) {
             if (args.length > 0) {
@@ -54,7 +58,8 @@ public class UseCommand implements SubCommand {
                             if (effect.getKarma() <= playerData.getKarma() || hasPerm) {
                                 playerData.setEffect(effect);
                                 playerData.save();
-                                KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("info.particles.use.success"));
+                                KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("info.particles.use.success",
+                                        "effect", effect.getDisplayName()));
                                 KarmaPlugin.getInstance().getLogger().info(player.getName()
                                         + " changed his particles to " + effect.getDisplayName());
                                 BukkitMessenger.applyParticles(player, effect);
@@ -62,13 +67,11 @@ public class UseCommand implements SubCommand {
                                 KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("error.notEnoughKarma"));
                             }
                         } else {
-                            KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("error.unavailableEffect")
-                                    .replace("{0}", args[0]));
+                            KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("error.unavailableEffect", "input", args[0]));
                         }
                     }
                 } else {
-                    KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("error.unknownEffect")
-                            .replace("{0}", args[0]));
+                    KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("error.unknownEffect", "input", args[0]));
                 }
             } else {
                 KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("error.wrongUsage.particles.use"));

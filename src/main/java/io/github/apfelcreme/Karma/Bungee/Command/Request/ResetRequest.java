@@ -5,6 +5,7 @@ import io.github.apfelcreme.Karma.Bungee.KarmaPluginConfig;
 import io.github.apfelcreme.Karma.Bungee.User.PlayerData;
 import io.github.apfelcreme.Karma.Bungee.User.Relation;
 import io.github.apfelcreme.Karma.Bungee.User.Transaction;
+import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.util.Collection;
@@ -40,7 +41,7 @@ public class ResetRequest extends Request {
      *
      * @param sender the player who created the request
      */
-    public ResetRequest(ProxiedPlayer sender, UUID target) {
+    public ResetRequest(CommandSender sender, UUID target) {
         super(sender);
         this.target = target;
     }

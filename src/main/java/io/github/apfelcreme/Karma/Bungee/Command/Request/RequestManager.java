@@ -1,9 +1,11 @@
 package io.github.apfelcreme.Karma.Bungee.Command.Request;
 
-import net.md_5.bungee.api.connection.ProxiedPlayer;
+import io.github.apfelcreme.Karma.Bungee.Utils.Utils;
+import net.md_5.bungee.api.CommandSender;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Copyright (C) 2016 Lord36 aka Apfelcreme
@@ -33,7 +35,7 @@ public class RequestManager {
     /**
      * the map of requests
      */
-    private Map<ProxiedPlayer, Request> requests;
+    private Map<UUID, Request> requests;
 
     /**
      * constructor
@@ -45,30 +47,30 @@ public class RequestManager {
     /**
      * adds a request
      *
-     * @param player  the request sender
+     * @param sender  the request sender
      * @param request the request
      */
-    public void addRequest(ProxiedPlayer player, Request request) {
-        requests.put(player, request);
+    public void addRequest(CommandSender sender, Request request) {
+        requests.put(Utils.getUuid(sender), request);
     }
 
     /**
-     * returns a players latest request
+     * returns a senders latest request
      *
-     * @param player a player
+     * @param sender a sender
      * @return his latest request
      */
-    public Request getRequest(ProxiedPlayer player) {
-        return requests.get(player);
+    public Request getRequest(CommandSender sender) {
+        return requests.get(Utils.getUuid(sender));
     }
 
     /**
-     * remoes a request
+     * removes a request
      *
-     * @param player the request sender
+     * @param sender the request sender
      */
-    public void removeRequest(ProxiedPlayer player) {
-        requests.remove(player);
+    public void removeRequest(CommandSender sender) {
+        requests.remove(Utils.getUuid(sender));
     }
 
     /**

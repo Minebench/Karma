@@ -40,21 +40,20 @@ public class ResetCommand implements SubCommand {
      */
     @Override
     public void execute(CommandSender sender, String[] args) {
-        ProxiedPlayer player = (ProxiedPlayer) sender;
-        if (player.hasPermission("karma.command.karma.reset")) {
+        if (sender.hasPermission("karma.command.karma.reset")) {
             if (args.length > 0) {
                 UUID targetUUID = KarmaPlugin.getInstance().getUUIDByName(args[0]);
                 if (targetUUID != null) {
-                    RequestManager.getInstance().addRequest(player, new ResetRequest(player, targetUUID));
-                    KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("info.karma.confirm.confirm"));
+                    RequestManager.getInstance().addRequest(sender, new ResetRequest(sender, targetUUID));
+                    KarmaPlugin.sendMessage(sender, KarmaPluginConfig.getInstance().getText("info.karma.confirm.confirm"));
                 } else {
-                    KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("error.unknownPlayer"));
+                    KarmaPlugin.sendMessage(sender, KarmaPluginConfig.getInstance().getText("error.unknownPlayer"));
                 }
             } else {
-                KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("error.wrongUsage.karma.reset"));
+                KarmaPlugin.sendMessage(sender, KarmaPluginConfig.getInstance().getText("error.wrongUsage.karma.reset"));
             }
         } else {
-            KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("error.noPermission"));
+            KarmaPlugin.sendMessage(sender, KarmaPluginConfig.getInstance().getText("error.noPermission"));
         }
     }
 

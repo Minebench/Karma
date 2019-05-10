@@ -5,6 +5,7 @@ import io.github.apfelcreme.Karma.Bungee.KarmaPlugin;
 import io.github.apfelcreme.Karma.Bungee.KarmaPluginConfig;
 import io.github.apfelcreme.Karma.Bungee.Particle.Effect;
 import io.github.apfelcreme.Karma.Bungee.User.PlayerData;
+import io.github.apfelcreme.Karma.Bungee.Utils.Utils;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
@@ -41,15 +42,14 @@ public class ListCommand implements SubCommand {
      */
     @Override
     public void execute(CommandSender sender, String[] args) {
-        ProxiedPlayer player = (ProxiedPlayer) sender;
-        if (player.hasPermission("karma.command.particles.list")) {
-            PlayerData playerData = KarmaPlugin.getInstance().getDatabaseController().getPlayerData(player.getUniqueId());
+        if (sender.hasPermission("karma.command.particles.list")) {
+            PlayerData playerData = KarmaPlugin.getInstance().getDatabaseController().getPlayerData(Utils.getUuid(sender));
             double karma = 0.0;
             if (playerData != null) {
                 karma = playerData.getKarma();
             }
             Collection<Effect> effects = KarmaPluginConfig.getInstance().getEffects();
-            KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("info.particles.list.header"));
+            KarmaPlugin.sendMessage(sender, KarmaPluginConfig.getInstance().getText("info.particles.list.header"));
             double finalKarma = karma;
             effects.stream()
                     .sorted(Comparator.comparingInt(Effect::getKarma))
@@ -64,9 +64,9 @@ public class ListCommand implements SubCommand {
                                 .replace("{0}", effect.getDisplayName())
                                 .replace("{1}", String.valueOf(effect.getKarma()));
                     })
-                    .forEachOrdered(message -> KarmaPlugin.sendMessage(player, message));
+                    .forEachOrdered(message -> KarmaPlugin.sendMessage(sender, message));
         } else {
-            KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("error.noPermission"));
+            KarmaPlugin.sendMessage(sender, KarmaPluginConfig.getInstance().getText("error.noPermission"));
         }
     }
 

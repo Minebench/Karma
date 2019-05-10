@@ -39,22 +39,21 @@ public class TopCommand implements SubCommand {
      */
     @Override
     public void execute(CommandSender sender, String[] args) {
-        ProxiedPlayer player = (ProxiedPlayer) sender;
-        if (player.hasPermission("karma.command.karma.top")) {
+        if (sender.hasPermission("karma.command.karma.top")) {
             List<PlayerData> topList = KarmaPlugin.getInstance().getDatabaseController()
                     .getTopList(KarmaPluginConfig.getInstance().getConfiguration().getInt("topListSize"));
-            KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("info.karma.top.header")
+            KarmaPlugin.sendMessage(sender, KarmaPluginConfig.getInstance().getText("info.karma.top.header")
                     .replace("{0}", String.valueOf(topList.size())));
             int i = 1;
             for (PlayerData playerData : topList) {
-                KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("info.karma.top.element")
+                KarmaPlugin.sendMessage(sender, KarmaPluginConfig.getInstance().getText("info.karma.top.element")
                         .replace("{0}", String.valueOf(i))
                         .replace("{1}", KarmaPlugin.getInstance().getNameByUUID(playerData.getUuid()))
                         .replace("{2}", new DecimalFormat("0.##").format(playerData.getKarma())));
                 i++;
             }
         } else {
-            KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("error.noPermission"));
+            KarmaPlugin.sendMessage(sender, KarmaPluginConfig.getInstance().getText("error.noPermission"));
         }
     }
 

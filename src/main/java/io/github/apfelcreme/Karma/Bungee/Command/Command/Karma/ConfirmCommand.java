@@ -39,13 +39,12 @@ public class ConfirmCommand implements SubCommand {
      */
     @Override
     public void execute(CommandSender sender, String[] args) {
-        ProxiedPlayer player = (ProxiedPlayer) sender;
-        if (player.hasPermission("karma.command.karma.confirm")) {
-            Request request = RequestManager.getInstance().getRequest(player);
+        if (sender.hasPermission("karma.command.karma.confirm")) {
+            Request request = RequestManager.getInstance().getRequest(sender);
             if (request != null) {
                 request.execute();
             } else {
-                KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("error.noRequest"));
+                KarmaPlugin.sendMessage(sender, KarmaPluginConfig.getInstance().getText("error.noRequest"));
             }
         }
     }

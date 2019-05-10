@@ -6,6 +6,7 @@ import io.github.apfelcreme.Karma.Bungee.KarmaPlugin;
 import io.github.apfelcreme.Karma.Bungee.KarmaPluginConfig;
 import io.github.apfelcreme.Karma.Bungee.User.PlayerData;
 import io.github.apfelcreme.Karma.Bungee.User.Relation;
+import io.github.apfelcreme.Karma.Bungee.Utils.Utils;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -41,10 +42,9 @@ public class ListCommand implements SubCommand {
      */
     @Override
     public void execute(CommandSender sender, String[] args) {
-        ProxiedPlayer player = (ProxiedPlayer) sender;
-        if (player.hasPermission("karma.command.karma.list")) {
-            UUID targetUUID = player.getUniqueId();
-            if (player.hasPermission("karma.command.karma.list.others") && args.length > 0) {
+        if (sender.hasPermission("karma.command.karma.list")) {
+            UUID targetUUID = Utils.getUuid(sender);
+            if (sender.hasPermission("karma.command.karma.list.others") && args.length > 0) {
                 targetUUID = KarmaPlugin.getInstance().getUUIDByName(args[0]);
             }
             if (targetUUID != null) {
@@ -68,12 +68,12 @@ public class ListCommand implements SubCommand {
                     if (page >= maxPages - 1) {
                         page = maxPages - 1;
                     }
-                    if (player.getUniqueId().equals(targetUUID)) {
-                        KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("info.karma.list.headerYou")
+                    if (Utils.getUuid(sender).equals(targetUUID)) {
+                        KarmaPlugin.sendMessage(sender, KarmaPluginConfig.getInstance().getText("info.karma.list.headerYou")
                                 .replace("{0}", String.valueOf(page + 1))
                                 .replace("{1}", String.valueOf(maxPages)));
                     } else {
-                        KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("info.karma.list.headerSomeoneElse")
+                        KarmaPlugin.sendMessage(sender, KarmaPluginConfig.getInstance().getText("info.karma.list.headerSomeoneElse")
                                 .replace("{0}", args[0])
                                 .replace("{1}", String.valueOf(page + 1))
                                 .replace("{2}", String.valueOf(maxPages)));
@@ -83,21 +83,21 @@ public class ListCommand implements SubCommand {
                             Relation relation = relations.get(i);
                             String toName = KarmaPlugin.getInstance().getNameByUUID(relation.getTo());
                             if (toName != null) {
-                                KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("info.karma.list.element")
+                                KarmaPlugin.sendMessage(sender, KarmaPluginConfig.getInstance().getText("info.karma.list.element")
                                         .replace("{0}", toName)
                                         .replace("{1}", new DecimalFormat("0.##").format(relation.getAmountGiven()))
                                         .replace("{2}", new DecimalFormat("0.##").format(relation.getAmountReceived())));
                             }
                         }
                     } else {
-                        KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("info.karma.list.noElements"));
+                        KarmaPlugin.sendMessage(sender, KarmaPluginConfig.getInstance().getText("info.karma.list.noElements"));
                     }
                 }
             } else {
-                KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("error.unknownPlayer"));
+                KarmaPlugin.sendMessage(sender, KarmaPluginConfig.getInstance().getText("error.unknownPlayer"));
             }
         } else {
-            KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("error.noPermission"));
+            KarmaPlugin.sendMessage(sender, KarmaPluginConfig.getInstance().getText("error.noPermission"));
         }
     }
 

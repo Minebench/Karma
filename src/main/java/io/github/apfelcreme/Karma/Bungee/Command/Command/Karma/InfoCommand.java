@@ -5,6 +5,7 @@ import io.github.apfelcreme.Karma.Bungee.Command.TabCompleter;
 import io.github.apfelcreme.Karma.Bungee.KarmaPlugin;
 import io.github.apfelcreme.Karma.Bungee.KarmaPluginConfig;
 import io.github.apfelcreme.Karma.Bungee.User.PlayerData;
+import io.github.apfelcreme.Karma.Bungee.Utils.Utils;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -42,29 +43,28 @@ public class InfoCommand implements SubCommand {
      */
     @Override
     public void execute(CommandSender sender, String[] args) {
-        ProxiedPlayer player = (ProxiedPlayer) sender;
-        if (player.hasPermission("karma.command.karma.info")) {
-            UUID targetUUID = player.getUniqueId();
-            if (player.hasPermission("karma.command.karma.info.others") && args.length > 0) {
+        if (sender.hasPermission("karma.command.karma.info")) {
+            UUID targetUUID = Utils.getUuid(sender);
+            if (sender.hasPermission("karma.command.karma.info.others") && args.length > 0) {
                 targetUUID = KarmaPlugin.getInstance().getUUIDByName(args[0]);
             }
             if (targetUUID != null) {
                 PlayerData playerData = KarmaPlugin.getInstance().getDatabaseController().getPlayerData(targetUUID);
                 if (playerData != null) {
-                    if (player.getUniqueId().equals(targetUUID)) {
-                        KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("info.karma.info.infoYou")
+                    if (Utils.getUuid(sender).equals(targetUUID)) {
+                        KarmaPlugin.sendMessage(sender, KarmaPluginConfig.getInstance().getText("info.karma.info.infoYou")
                                 .replace("{0}", new DecimalFormat("0.##").format(playerData.getKarma())));
                     } else {
-                        KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("info.karma.info.infoSomeoneElse")
+                        KarmaPlugin.sendMessage(sender, KarmaPluginConfig.getInstance().getText("info.karma.info.infoSomeoneElse")
                                 .replace("{0}", args[0])
                                 .replace("{1}", new DecimalFormat("0.##").format(playerData.getKarma())));
                     }
                 }
             } else {
-                KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("error.unknownPlayer"));
+                KarmaPlugin.sendMessage(sender, KarmaPluginConfig.getInstance().getText("error.unknownPlayer"));
             }
         } else {
-            KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("error.noPermission"));
+            KarmaPlugin.sendMessage(sender, KarmaPluginConfig.getInstance().getText("error.noPermission"));
         }
     }
 

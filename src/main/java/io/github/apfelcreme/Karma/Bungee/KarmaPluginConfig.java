@@ -267,9 +267,13 @@ public class KarmaPluginConfig {
      * @param key the config path
      * @return the text
      */
-    public String getText(String key) {
-        String ret = (String) languageConfiguration.get("texts." + key);
+    public String getText(String key, String... replacements) {
+        String ret = languageConfiguration.getString("texts." + key);
         if (ret != null && !ret.isEmpty()) {
+            for (int i = 0; i + 1 < replacements.length; i += 2) {
+                ret = ret.replace("{" + replacements[i] + "}", replacements[i+1]);
+                ret = ret.replace("{" + (i / 2) + "}", replacements[i+1]);
+            }
             ret = ChatColor.translateAlternateColorCodes('&', ret);
             return ChatColor.translateAlternateColorCodes('§', ret);
         } else {

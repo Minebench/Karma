@@ -61,27 +61,23 @@ public class SubCommandExecutor extends Command implements TabExecutor {
 
     @Override
     public void execute(final CommandSender commandSender, final String[] strings) {
-        if (commandSender instanceof ProxiedPlayer) {
-            SubCommand subCommand;
-            if (strings.length > 0) {
-                subCommand = subCommands.get(strings[0].toLowerCase());
-                if (subCommand == null) {
-                    KarmaPlugin.sendMessage(commandSender, KarmaPluginConfig.getInstance().getText("error.unknownCommand")
-                            .replace("{0}", strings[0]));
-                }
-            } else {
-                subCommand = subCommands.get("help");
-            }
-            if (subCommand != null) {
-                final SubCommand finalSubCommand = subCommand;
-
-                // execute the subcommand in a thread
-                ProxyServer.getInstance().getScheduler().runAsync(KarmaPlugin.getInstance(),
-                        () -> finalSubCommand.execute(commandSender, strings.length > 0 ? Arrays.copyOfRange(strings, 1, strings.length) : new String[0])
-                );
+        SubCommand subCommand;
+        if (strings.length > 0) {
+            subCommand = subCommands.get(strings[0].toLowerCase());
+            if (subCommand == null) {
+                KarmaPlugin.sendMessage(commandSender, KarmaPluginConfig.getInstance().getText("error.unknownCommand")
+                        .replace("{0}", strings[0]));
             }
         } else {
-            ProxyServer.getInstance().getLogger().info("Command cannot be used from console!");
+            subCommand = subCommands.get("help");
+        }
+        if (subCommand != null) {
+            final SubCommand finalSubCommand = subCommand;
+
+            // execute the subcommand in a thread
+            ProxyServer.getInstance().getScheduler().runAsync(KarmaPlugin.getInstance(),
+                    () -> finalSubCommand.execute(commandSender, strings.length > 0 ? Arrays.copyOfRange(strings, 1, strings.length) : new String[0])
+            );
         }
     }
 

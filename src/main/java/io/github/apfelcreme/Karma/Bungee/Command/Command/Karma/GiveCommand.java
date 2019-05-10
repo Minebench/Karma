@@ -7,6 +7,7 @@ import io.github.apfelcreme.Karma.Bungee.Exception.OncePerDayException;
 import io.github.apfelcreme.Karma.Bungee.KarmaPlugin;
 import io.github.apfelcreme.Karma.Bungee.KarmaPluginConfig;
 import io.github.apfelcreme.Karma.Bungee.User.Transaction;
+import io.github.apfelcreme.Karma.Bungee.Utils.Utils;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -44,47 +45,46 @@ public class GiveCommand implements SubCommand {
      */
     @Override
     public void execute(CommandSender sender, String[] args) {
-        ProxiedPlayer player = (ProxiedPlayer) sender;
-        if (player.hasPermission("karma.command.karma.give")) {
+        if (sender.hasPermission("karma.command.karma.give")) {
             if (args.length > 0) {
                 UUID uuid = KarmaPlugin.getInstance().getUUIDByName(args[0]);
                 if (uuid != null) {
-                    if (!uuid.equals(player.getUniqueId())) {
+                    if (!uuid.equals(Utils.getUuid(sender))) {
                         ProxiedPlayer receiver = ProxyServer.getInstance().getPlayer(uuid);
                         if (receiver != null) {
                             try {
-                                Transaction transaction = new Transaction(player.getUniqueId(), uuid);
+                                Transaction transaction = new Transaction(Utils.getUuid(sender), uuid);
                                 transaction.save(sender);
-                                KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("info.thx.thxGiven")
+                                KarmaPlugin.sendMessage(sender, KarmaPluginConfig.getInstance().getText("info.thx.thxGiven")
                                         .replace("{0}", receiver.getName())
                                         .replace("{1}", new DecimalFormat("0.##").format(transaction.getAmount())));
                                 KarmaPlugin.sendMessage(receiver, KarmaPluginConfig.getInstance().getText("info.thx.thxReceived")
                                         .replace("{0}", sender.getName())
                                         .replace("{1}", new DecimalFormat("0.##").format(transaction.getAmount())));
                             } catch (OncePerDayException e) {
-                                KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("error.oncePerDay")
+                                KarmaPlugin.sendMessage(sender, KarmaPluginConfig.getInstance().getText("error.oncePerDay")
                                         .replace("{0}", receiver.getName()));
                             } catch (InsaneKarmaAmountException e) {
                                 KarmaPlugin.getInstance().getLogger().warning("Insane karma amount: " + e.getTransaction());
-                                KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("error.insaneKarmaAmount")
+                                KarmaPlugin.sendMessage(sender, KarmaPluginConfig.getInstance().getText("error.insaneKarmaAmount")
                                         .replace("{0}", receiver.getName())
                                         .replace("{1}", String.valueOf(e.getTransaction().getAmount()))
                                 );
                             }
                         } else {
-                            KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("error.offlinePlayer"));
+                            KarmaPlugin.sendMessage(sender, KarmaPluginConfig.getInstance().getText("error.offlinePlayer"));
                         }
                     } else {
-                        KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("error.noSelfTransaction"));
+                        KarmaPlugin.sendMessage(sender, KarmaPluginConfig.getInstance().getText("error.noSelfTransaction"));
                     }
                 } else {
-                    KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("error.unknownPlayer"));
+                    KarmaPlugin.sendMessage(sender, KarmaPluginConfig.getInstance().getText("error.unknownPlayer"));
                 }
             } else {
-                KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("error.wrongUsage.thx.thx"));
+                KarmaPlugin.sendMessage(sender, KarmaPluginConfig.getInstance().getText("error.wrongUsage.thx.thx"));
             }
         } else {
-            KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("error.noPermission"));
+            KarmaPlugin.sendMessage(sender, KarmaPluginConfig.getInstance().getText("error.noPermission"));
         }
     }
 
