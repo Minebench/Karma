@@ -8,6 +8,7 @@ import net.md_5.bungee.config.ConfigurationProvider;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -68,11 +69,6 @@ public class KarmaPluginConfig {
     private Map<String, Effect> effectsByName = new HashMap<>();
 
     /**
-     * the levels
-     */
-    private Map<Integer, Effect> levelMap = new TreeMap<>();
-
-    /**
      * constructor
      */
     public KarmaPluginConfig() {
@@ -114,11 +110,10 @@ public class KarmaPluginConfig {
                 if (effectsConfig.contains(name + ".karma")) {
                     int karma = effectsConfig.getInt(name + ".karma");
                     effect.setKarma(karma);
-                    levelMap.put(karma, effect);
                 }
                 logDebug("Loaded effect " + effect);
             }
-            KarmaPlugin.getInstance().getLogger().info("Loaded " + effects.size() + " effects and " + levelMap.size() + " levels from config!");
+            KarmaPlugin.getInstance().getLogger().info("Loaded " + effects.size() + " effects from config!");
             logDebug(effectsByName.size() + " effects names and alias mappings.");
 
             yamlProvider.save(configuration, configurationFile);
@@ -258,12 +253,12 @@ public class KarmaPluginConfig {
     }
 
     /**
-     * returns the levels at which new particles are available to the players
+     * get all effects
      *
-     * @return a map containing all levels at which new particles are available
+     * @return all effects
      */
-    public Map<Integer, Effect> getParticles() {
-        return levelMap;
+    public Collection<Effect> getEffects() {
+        return effects.values();
     }
 
     /**

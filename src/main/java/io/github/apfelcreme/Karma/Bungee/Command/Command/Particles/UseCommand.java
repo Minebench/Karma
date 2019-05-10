@@ -1,6 +1,5 @@
 package io.github.apfelcreme.Karma.Bungee.Command.Command.Particles;
 
-import de.themoep.vnpbungee.VNPBungee;
 import io.github.apfelcreme.Karma.Bungee.BukkitMessenger;
 import io.github.apfelcreme.Karma.Bungee.Command.SubCommand;
 import io.github.apfelcreme.Karma.Bungee.KarmaPlugin;
@@ -11,8 +10,9 @@ import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Copyright (C) 2016 Lord36 aka Apfelcreme
@@ -79,12 +79,16 @@ public class UseCommand implements SubCommand {
 
     @Override
     public List<String> getTabCompletions(CommandSender sender, String[] args) {
-        List<String> suggestions = new ArrayList<>();
-        if (sender.hasPermission("karma.command.particles.use")) {
-            for (Effect effect : KarmaPluginConfig.getInstance().getParticles().values()) {
-                suggestions.add(effect.getDisplayName());
+        if (sender instanceof ProxiedPlayer && sender.hasPermission("karma.command.particles.use")) {
+            PlayerData playerData = KarmaPlugin.getInstance().getDatabaseController().getPlayerData(((ProxiedPlayer) sender).getUniqueId());
+            if (playerData != null) {
+                return KarmaPluginConfig.getInstance().getEffects().stream()
+                        .sorted(Comparator.comparingInt(Effect::getKarma))
+                        .filter(effect -> (effect.getKarma() > -1 && playerData.getKarma() >= effect.getKarma()) || sender.hasPermission("karma.effect." + effect.getName().toLowerCase()))
+                        .map(effect -> effect.getDisplayName().toLowerCase())
+                        .collect(Collectors.toList());
             }
         }
-        return suggestions;
+        return new ArrayList<>();
     }
 }

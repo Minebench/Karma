@@ -12,8 +12,10 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Copyright (C) 2016 Lord36 aka Apfelcreme
@@ -77,16 +79,16 @@ public class SetCommand implements SubCommand {
 
     @Override
     public List<String> getTabCompletions(CommandSender sender, String[] args) {
-        List<String> suggestions = new ArrayList<>();
         if (sender.hasPermission("karma.command.particles.set")) {
             if (args.length == 2) {
-                suggestions.addAll(TabCompleter.getPlayers(sender));
+                return TabCompleter.getPlayers(sender);
             } else if (args.length == 3) {
-                for (Effect effect : KarmaPluginConfig.getInstance().getParticles().values()) {
-                    suggestions.add(effect.getDisplayName());
-                }
+                return KarmaPluginConfig.getInstance().getEffects().stream()
+                        .sorted((o1, o2) -> o1.getDisplayName().compareToIgnoreCase(o2.getDisplayName()))
+                        .map(effect -> effect.getDisplayName().toLowerCase())
+                        .collect(Collectors.toList());
             }
         }
-        return suggestions;
+        return new ArrayList<>();
     }
 }

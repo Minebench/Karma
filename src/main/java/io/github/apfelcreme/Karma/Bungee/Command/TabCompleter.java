@@ -116,7 +116,7 @@ public class TabCompleter implements Listener {
 
     }
 
-    public static Collection<String> getPlayers(CommandSender sender) {
+    public static List<String> getPlayers(CommandSender sender) {
         List<String> players = new ArrayList<>();
         for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
             if (KarmaPlugin.getInstance().canSee((ProxiedPlayer) sender, player)) {
@@ -126,7 +126,7 @@ public class TabCompleter implements Listener {
         return players;
     }
 
-    public static Collection<String> getPlayers(CommandSender sender, String... starts) {
+    public static List<String> getPlayers(CommandSender sender, String... starts) {
         if (starts.length > 0) {
             List<String> players = new ArrayList<>();
             for (String playerName : getPlayers(sender)) {

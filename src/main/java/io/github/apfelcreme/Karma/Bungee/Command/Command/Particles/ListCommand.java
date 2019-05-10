@@ -9,8 +9,9 @@ import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Copyright (C) 2016 Lord36 aka Apfelcreme
@@ -43,25 +44,24 @@ public class ListCommand implements SubCommand {
         ProxiedPlayer player = (ProxiedPlayer) sender;
         if (player.hasPermission("karma.command.particles.list")) {
             PlayerData playerData = KarmaPlugin.getInstance().getDatabaseController().getPlayerData(player.getUniqueId());
-            Double karma = 0.0;
+            double karma = 0.0;
             if (playerData != null) {
                 karma = playerData.getKarma();
             }
-            Map<Integer, Effect> effects = KarmaPluginConfig.getInstance().getParticles();
+            Collection<Effect> effects = KarmaPluginConfig.getInstance().getEffects();
             KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("info.particles.list.header"));
-            for (Map.Entry<Integer, Effect> entry : effects.entrySet()) {
-                int karmaThreshold = entry.getKey();
-                Effect effect = entry.getValue();
-                if (karma >= karmaThreshold || sender.hasPermission("karma.effect." + effect.getName().toLowerCase())) {
+            double finalKarma = karma;
+            effects.stream().sorted(Comparator.comparingInt(Effect::getKarma)).forEachOrdered(effect -> {
+                if ((effect.getKarma() > -1 && finalKarma >= effect.getKarma()) || sender.hasPermission("karma.effect." + effect.getName().toLowerCase())) {
                     KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("info.particles.list.elementOk")
                             .replace("{0}", effect.getDisplayName())
-                            .replace("{1}", String.valueOf(karmaThreshold)));
-                } else {
+                            .replace("{1}", String.valueOf(effect.getKarma() > -1 ? effect.getKarma() : 0)));
+                } else if (effect.getKarma() > -1){
                     KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("info.particles.list.elementNotOk")
                             .replace("{0}", effect.getDisplayName())
-                            .replace("{1}", String.valueOf(karmaThreshold)));
+                            .replace("{1}", String.valueOf(effect.getKarma())));
                 }
-            }
+            });
         } else {
             KarmaPlugin.sendMessage(player, KarmaPluginConfig.getInstance().getText("error.noPermission"));
         }
