@@ -72,7 +72,11 @@ public class Transaction {
                 && System.currentTimeMillis() < (senderData.getRelation(receiver).getLastTransactionTime() + KarmaPluginConfig.getInstance().getConfiguration().getInt("thxCooldown") * 60 * 1000)) {
             throw new OncePerDayException(senderData.getRelation(receiver));
         }
-        amount = KarmaPluginConfig.getInstance().getConfiguration().getDouble("karmaPerThx") * senderData.getRelation(receiver).getRatio();
+        amount = KarmaPluginConfig.getInstance().getConfiguration().getDouble("karmaPerThx");
+        double ratio = senderData.getRelation(receiver).getRatio();
+        if (ratio < 1 && !commandSender.hasPermission("karma.command.give.bypassratio")) {
+            amount *= ratio;
+        }
         if (amount < 0 || amount > KarmaPluginConfig.getInstance().getConfiguration().getDouble("karmaPerThx")) {
             throw new InsaneKarmaAmountException(this);
         }
