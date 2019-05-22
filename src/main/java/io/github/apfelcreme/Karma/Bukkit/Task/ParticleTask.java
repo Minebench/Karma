@@ -8,6 +8,7 @@ import org.bukkit.scheduler.BukkitTask;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Copyright (C) 2016 Lord36 aka Apfelcreme
@@ -42,7 +43,7 @@ public class ParticleTask {
     /**
      * a map of players with their particle clouds
      */
-    private Map<Player, ParticleCloud> playerEffectMap = new HashMap<>();
+    private Map<UUID, ParticleCloud> playerEffectMap = new HashMap<>();
 
     /**
      * the number of runs the task has done
@@ -77,22 +78,16 @@ public class ParticleTask {
         task = new BukkitRunnable() {
             @Override
             public void run() {
-                for (Map.Entry<Player, ParticleCloud> entry : playerEffectMap.entrySet()) {
-                    Player player = entry.getKey();
-                    if (KarmaPlugin.getInstance().getVnp() == null || !KarmaPlugin.getInstance().getVnp().getManager().isVanished(player)) {
-                        ParticleCloud particleCloud = entry.getValue();
-                        if (particleCloud.getDelay() / 100 > 1) {
-                            long r = runs % particleCloud.getDelay();
-                            if (r < particleCloud.getDelay() / 10) {
-                                particleCloud.display(
-                                        player.getLocation(),
-                                        (int) (particleCloud.getCount() * (r / (particleCloud.getDelay() / 10.0)))
-                                );
-                            }
-                        } else {
-                            if ((runs % particleCloud.getDelay()) == 0) {
-                                particleCloud.display(player.getLocation());
-                            }
+                for (Map.Entry<UUID, ParticleCloud> entry : playerEffectMap.entrySet()) {
+                    ParticleCloud particleCloud = entry.getValue();
+                    if (particleCloud.getDelay() / 100 > 1) {
+                        long r = runs % particleCloud.getDelay();
+                        if (r < particleCloud.getDelay() / 10) {
+                            particleCloud.display((int) (particleCloud.getCount() * (r / (particleCloud.getDelay() / 10.0))));
+                        }
+                    } else {
+                        if ((runs % particleCloud.getDelay()) == 0) {
+                            particleCloud.display();
                         }
                     }
                     runs++;
@@ -121,7 +116,7 @@ public class ParticleTask {
      * @param particleCloud the particle cloud
      */
     public void addCloud(Player player, ParticleCloud particleCloud) {
-        playerEffectMap.put(player, particleCloud);
+        playerEffectMap.put(player.getUniqueId(), particleCloud);
         if (!isActive()) {
             create();
         }
@@ -133,7 +128,7 @@ public class ParticleTask {
      * @param player the particle cloud owner
      */
     public void removeCloud(Player player) {
-        playerEffectMap.remove(player);
+        playerEffectMap.remove(player.getUniqueId());
         if (playerEffectMap.size() == 0) {
             kill();
         }

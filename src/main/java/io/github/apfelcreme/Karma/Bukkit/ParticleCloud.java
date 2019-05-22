@@ -4,9 +4,9 @@ import org.bukkit.Color;
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Particle;
+import org.bukkit.entity.Player;
 
 import java.util.Random;
-import java.util.UUID;
 
 /**
  * Copyright (C) 2016 Lord36 aka Apfelcreme
@@ -46,14 +46,14 @@ public class ParticleCloud {
             Color.TEAL
     };
 
-    private final UUID owner;
+    private final Player owner;
     private final Particle particle;
     private final Effect effect;
     private final long delay;
     private final int count;
     private final double extra;
 
-    public ParticleCloud(UUID owner, Particle particle, Effect effect, long delay, int count, double extra) {
+    public ParticleCloud(Player owner, Particle particle, Effect effect, long delay, int count, double extra) {
         this.owner = owner;
         this.particle = particle;
         this.effect = effect;
@@ -68,21 +68,21 @@ public class ParticleCloud {
 
     /**
      * displays the particle effects at the given location
-     *
-     * @param location the location where the particles are displayed
      */
-    public void display(Location location) {
-        display(location, count);
+    public void display() {
+        display(count);
     }
 
     /**
      * displays the particle effects at the given location
      *
-     * @param location the location where the particles are displayed
      * @param count the count to use
      */
-    public void display(Location location, int count) {
-
+    public void display(int count) {
+        if (!owner.isOnline()) {
+            return;
+        }
+        Location location = owner.getLocation();
         if (particle != null) {
             Object data = null;
             double extra = this.extra;
@@ -92,7 +92,8 @@ public class ParticleCloud {
             if (particle == Particle.REDSTONE) {
                 data = new Particle.DustOptions(COLORS[RANDOM.nextInt(COLORS.length)], 1);
             }
-            location.getWorld().spawnParticle(particle, location, count, 0.5f, 1.5f, 0.5f, extra, data);
+            location.getWorld().spawnParticle(particle, location.getWorld().getPlayers(), owner,
+                    location.getX(), location.getY(), location.getZ(), count, 0.5f, 1.5f, 0.5f, extra, data);
         }
         if (effect != null) {
             for (int i = 0; i < count; i++) {
@@ -106,7 +107,7 @@ public class ParticleCloud {
      *
      * @return the owner
      */
-    public UUID getOwner() {
+    public Player getOwner() {
         return owner;
     }
 
