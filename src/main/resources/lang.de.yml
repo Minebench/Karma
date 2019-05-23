@@ -72,6 +72,7 @@ texts:
       list:
         header: '&f Folgende Partikel kannst du nutzen:'
         elementOk: '&8 - &d{0}: &a{1} Karma'
+        elementSet: '&8 > &e{0}: &a{1} Karma'
         elementNotOk: '&8 - &d{0}: &c{1} Karma'
       request: '&f Bestätige die Aktion mit &d/particles confirm'
       set:

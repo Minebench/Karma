@@ -56,7 +56,8 @@ public class ListCommand implements SubCommand {
                     .filter(effect -> effect.getKarma() > -1 || sender.hasPermission("karma.effect." + effect.getName().toLowerCase()))
                     .map(effect -> {
                         if (finalKarma >= effect.getKarma() || sender.hasPermission("karma.effect." + effect.getName().toLowerCase())) {
-                            return KarmaPluginConfig.getInstance().getText("info.particles.list.elementOk")
+                            return KarmaPluginConfig.getInstance().getText("info.particles.list.element"
+                                    + (playerData != null && playerData.getEffect() == effect ? "Set" : "Ok"))
                                     .replace("{0}", effect.getDisplayName())
                                     .replace("{1}", String.valueOf(effect.getKarma() > -1 ? effect.getKarma() : 0));
                         }
