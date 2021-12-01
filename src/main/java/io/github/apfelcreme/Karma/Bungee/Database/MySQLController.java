@@ -71,7 +71,7 @@ public class MySQLController implements DatabaseController {
                         "SELECT * FROM " + KarmaPluginConfig.getInstance().getPlayerTable() + " WHERE uuid = ?");
                 statement.setString(1, uuid.toString());
                 resultSet = statement.executeQuery();
-                if (resultSet.first()) {
+                if (resultSet.next()) {
                     // player data was found
                     String effectName = resultSet.getString("effect");
                     playerData = new PlayerData(
